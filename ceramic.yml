@@ -1,0 +1,10 @@
+app:
+    package: mycompany.tablevariable
+    name: tablevariable
+    displayName: tablevariable
+    author: My Company
+    version: '1.0'
+
+    libs: ['nape']
+    hxml: |
+        -D ceramic_nape_physics
