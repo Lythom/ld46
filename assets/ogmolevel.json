@@ -1,0 +1,141 @@
+{
+  "ogmoVersion": "3.3.0",
+  "width": 1426,
+  "height": 1426,
+  "offsetX": 0,
+  "offsetY": 0,
+  "layers": [
+    {
+      "name": "main",
+      "_eid": "79947005",
+      "offsetX": 0,
+      "offsetY": 0,
+      "gridCellWidth": 1,
+      "gridCellHeight": 1,
+      "gridCellsX": 1426,
+      "gridCellsY": 1426,
+      "decals": [
+        {"x": 686, "y": 708, "scaleX": 1, "scaleY": 1, "rotation": 0, "texture": "tableBase.png"},
+        {"x": 533, "y": 922, "scaleX": 1, "scaleY": 1, "rotation": 0, "texture": "pieceBottom.png"},
+        {"x": 834, "y": 507, "scaleX": 1, "scaleY": 1, "rotation": 0, "texture": "pieceTop.png"},
+        {"x": 430, "y": 1099, "scaleX": 1, "scaleY": 1, "rotation": 3.141592653589793, "texture": "pivoterCourt.png"},
+        {"x": 942, "y": 317, "scaleX": 1, "scaleY": 1, "rotation": 0, "texture": "pivoterCourt.png"},
+        {"x": 467, "y": 377, "scaleX": 1, "scaleY": 1, "rotation": 0, "texture": "pivoterLong.png"},
+        {"x": 904, "y": 1038, "scaleX": 1, "scaleY": 1, "rotation": 0, "texture": "pivoterLong.png"}
+      ],
+      "folder": "assets"
+    },
+    {
+      "name": "constraints",
+      "_eid": "80049523",
+      "offsetX": 0,
+      "offsetY": 0,
+      "gridCellWidth": 1,
+      "gridCellHeight": 1,
+      "gridCellsX": 1426,
+      "gridCellsY": 1426,
+      "entities": [
+        {
+          "name": "pivot",
+          "id": 0,
+          "_eid": "80043544",
+          "x": 468,
+          "y": 248,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "PivoterLong", "to": "PartTop"}
+        },
+        {
+          "name": "pivot",
+          "id": 1,
+          "_eid": "80043544",
+          "x": 942,
+          "y": 247,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "PivoterCourt", "to": "PartTop"}
+        },
+        {
+          "name": "pivot",
+          "id": 2,
+          "_eid": "80043544",
+          "x": 467,
+          "y": 377,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "Base", "to": "PivoterLong"}
+        },
+        {
+          "name": "pivot",
+          "id": 3,
+          "_eid": "80043544",
+          "x": 467,
+          "y": 507,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "PivoterLong", "to": "PartBottom"}
+        },
+        {
+          "name": "pivot",
+          "id": 4,
+          "_eid": "80043544",
+          "x": 942,
+          "y": 377,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "Base", "to": "PivoterCourt"}
+        },
+        {
+          "name": "pivot",
+          "id": 5,
+          "_eid": "80043544",
+          "x": 904,
+          "y": 908,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "PivoterLong", "to": "PartTop"}
+        },
+        {
+          "name": "pivot",
+          "id": 6,
+          "_eid": "80043544",
+          "x": 904,
+          "y": 1038,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "Base", "to": "PivoterLong"}
+        },
+        {
+          "name": "pivot",
+          "id": 7,
+          "_eid": "80043544",
+          "x": 904,
+          "y": 1168,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "PivoterLong", "to": "PartBottom"}
+        },
+        {
+          "name": "pivot",
+          "id": 8,
+          "_eid": "80043544",
+          "x": 429,
+          "y": 1038,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "Base", "to": "PivoterCourt"}
+        },
+        {
+          "name": "pivot",
+          "id": 9,
+          "_eid": "80043544",
+          "x": 429,
+          "y": 1168,
+          "originX": 0,
+          "originY": 0,
+          "values": {"from": "PivoterCourt", "to": "PartBottom"}
+        }
+      ]
+    }
+  ]
+}

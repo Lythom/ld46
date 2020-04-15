@@ -3,7 +3,7 @@
     "items": [
         {
             "displayName": "▶︎ luxe / Run Web",
-            "description": "ceramic luxe run web --setup --assets",
+            "description": "ceramic luxe run web",
             "tasks": [
                 {
                     "type": "shell",
@@ -23,7 +23,6 @@
                         "--assets",
                         "--vscode-editor",
                         "--hxml-output",
-                        "--no-skip",
                         "completion.hxml"
                     ],
                     "group": {

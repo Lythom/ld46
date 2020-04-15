@@ -1,6 +1,6 @@
 {
-    "displayName": "▶︎ luxe / Run Web (debug)",
-    "description": "ceramic luxe run web --setup --assets --debug",
+    "displayName": "▶︎ luxe / Run Web",
+    "description": "ceramic luxe run web",
     "tasks": [
         {
             "type": "shell",
@@ -20,9 +20,7 @@
                 "--assets",
                 "--vscode-editor",
                 "--hxml-output",
-                "completion.hxml",
-                "--debug",
-                "--no-skip"
+                "completion.hxml"
             ],
             "group": {
                 "kind": "build",
@@ -32,5 +30,5 @@
         }
     ],
     "version": "2.0.0",
-    "chooserIndex": 1
+    "chooserIndex": 0
 }

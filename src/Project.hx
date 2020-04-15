@@ -1,5 +1,13 @@
 package;
 
+
+import ceramic.Texts;
+import ceramic.TextAsset;
+import ceramic.Asset;
+import nape.geom.MarchingSquares;
+import nape.geom.AABB;
+import nape.geom.IsoFunction;
+import ceramic.Triangulate;
 import nape.shape.Polygon;
 import ceramic.Text;
 import ceramic.Point;
@@ -17,6 +25,7 @@ import ceramic.Color;
 import ceramic.Quad;
 import ceramic.InitSettings;
 import ceramic.Shortcuts.*;
+// import ogmo.Level;
 
 class Project extends Entity {
 	var tableBaseFilter = new InteractionFilter(1, 1);
@@ -33,6 +42,9 @@ class Project extends Entity {
 		settings.scaling = FILL;
 
 		app.onceReady(this, ready);
+		// var levelText = Texts.OGMOLEVEL;
+		// var level = Level.create(levelText);
+		// trace(level);
 	} // new
 
 	function ready() {
@@ -88,9 +100,6 @@ class Project extends Entity {
 			tableFeets.pos(0, 0);
 			tableFeets.initNapePhysics(NapePhysicsBodyType.KINEMATIC);
 			tableFeets.nape.body.setShapeFilters(tableBaseFilter);
-			var t = new Text();
-			t.id = "text";
-			tableFeets.add(t);
 
 			connectorTL.size(30, 300);
 			connectorTL.anchor(0.5, 0.5);
@@ -102,9 +111,6 @@ class Project extends Entity {
 			connectorTLPivot = new PivotJoint(connectorTL.nape.body, tableFeets.nape.body, Vec2.weak(),
 				tableFeets.nape.body.worldPointToLocal(Vec2.weak(-tableFeets.width * 0.5 + 15, -tableFeets.height * 0.5 + 15)));
 			connectorTLPivot.space = app.nape.space;
-			t = new Text();
-			t.id = "text";
-			connectorTL.add(t);
 
 			connectorBR.size(30, 300);
 			connectorBR.anchor(0.5, 0.5);
@@ -139,18 +145,6 @@ class Project extends Entity {
 				tableFeets.nape.body.worldPointToLocal(Vec2.weak(-tableFeets.width * 0.5 + 15, tableFeets.height * 0.5 - 15)));
 			connectorBLPivot.space = app.nape.space;
 
-			shape.color = Color.RED;
-			shape.vertices = [
-				  0,   0,
-				800,   0,
-				800, 940,
-				400, 940,
-				400, 300,
-				  0, 300
-			];
-			shape.indices = [for (i in 0...shape.vertices.length) i];
-			// shape.initNapePhysics(NapePhysicsBodyType.DYNAMIC);
-
 			quad1.color = Color.RED;
 			quad1.depth = 2;
 			quad1.size(50, 50);
@@ -182,6 +176,16 @@ class Project extends Entity {
 			pointer.size(5, 5);
 			pointer.anchor(0.5, 0.5);
 			pointer.rotation = 45;
+
+			var bounds:AABB;
+			var granularity:Vec2 = null;
+			var quality:Int = 2;
+			var simplification:Float = 1.5;
+
+			// var cogIso = new BitmapDataIso(new Cog(0,0), 0x80);
+			// var polys = MarchingSquares.run(cogIso, bounds, granularity, quality);
+
+			// Triangulate.triangulate(null, null, null);
 
 			strokeBuilder.thickness = 5;
 			strokeBuilder.cap = BUTT;
@@ -256,4 +260,52 @@ class Project extends Entity {
 			}
 		});
 	} // ready
+
+	// class DisplayObjectIso implements IsoFunction {
+	// 	public var displayObject:DisplayObject;
+	// 	public var bounds:AABB;
+	// 	public function new(displayObject:DisplayObject) {
+	// 		this.displayObject = displayObject;
+	// 		this.bounds = AABB.fromRect(displayObject.getBounds(displayObject));
+	// 	}
+	// 	public function iso(x:Float, y:Float) {
+	// 		// Best we can really do with a generic DisplayObject
+	// 		// is to return a binary value {-1, 1} depending on
+	// 		// if the sample point is in or out side.
+	// 		return (displayObject.hitTestPoint(x, y, true) ? -1.0 : 1.0);
+	// 	}
+	// }
+
+	// class BitmapDataIso implements IsoFunction {
+	// 	public var bitmap:BitmapData;
+	// 	public var alphaThreshold:Float;
+	// 	public var bounds:AABB;
+	// 	public function new(bitmap:BitmapData, alphaThreshold:Float = 0x80) {
+	// 		this.bitmap = bitmap;
+	// 		this.alphaThreshold = alphaThreshold;
+	// 		bounds = new AABB(0, 0, bitmap.width, bitmap.height);
+	// 	}
+	// 	public function graphic() {
+	// 		return new Bitmap(bitmap);
+	// 	}
+	// 	public function iso(x:Float, y:Float) {
+	// 		// Take 4 nearest pixels to interpolate linearly.
+	// 		// This gives us a smooth iso-function for which
+	// 		// we can use a lower quality in MarchingSquares for
+	// 		// the root finding.
+	// 		var ix = Std.int(x); var iy = Std.int(y);
+	// 		//clamp in-case of numerical inaccuracies
+	// 		if(ix<0) ix = 0; if(iy<0) iy = 0;
+	// 		if(ix>=bitmap.width)  ix = bitmap.width-1;
+	// 		if(iy>=bitmap.height) iy = bitmap.height-1;
+	// 		// iso-function values at each pixel centre.
+	// 		var a11 = alphaThreshold - (bitmap.getPixel32(ix,iy)>>>24);
+	// 		var a12 = alphaThreshold - (bitmap.getPixel32(ix+1,iy)>>>24);
+	// 		var a21 = alphaThreshold - (bitmap.getPixel32(ix,iy+1)>>>24);
+	// 		var a22 = alphaThreshold - (bitmap.getPixel32(ix+1,iy+1)>>>24);
+	// 		// Bilinear interpolation for sample point (x,y)
+	// 		var fx = x - ix; var fy = y - iy;
+	// 		return a11*(1-fx)*(1-fy) + a12*fx*(1-fy) + a21*(1-fx)*fy + a22*fx*fy;
+	// 	}
+	// }
 }
