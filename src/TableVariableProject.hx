@@ -53,10 +53,10 @@ class TableVariableProject extends Entity {
 
 	function ready() {
 		assets = new Assets();
+		assets.watchDirectory(ceramic.macros.DefinesMacro.getDefine('assets_path'));
 		assets.addAll(~/^preload\//);
 		assets.onceComplete(this, start);
 		assets.load();
-		assets.watchDirectory('C:\\projets\\ceramictest\\tablevariable\\assets');
 	}
 
 	function getTextureFromName(name:String):Texture {
@@ -108,9 +108,11 @@ class TableVariableProject extends Entity {
 		var objects:List<Quad> = new List<Quad>();
 		var joints:List<PivotJoint> = new List<PivotJoint>();
 		var debugLines:List<DebugLine> = new List<DebugLine>();
+
 		function reset() {
 			trace("do reset");
 			for (quad in objects) {
+				quad.nape.body.space = null;
 				quad.destroy();
 			}
 			objects.clear();
@@ -130,7 +132,9 @@ class TableVariableProject extends Entity {
 				var name = decal.texture.toLowerCase();
 				var object = new Quad();
 				var texture:Texture = getTextureFromName(name);
-
+				texture.asset.offReplaceTexture();
+				texture.asset.onReplaceTexture(this, (_,__) -> reset());
+				
 				object.texture = texture;
 				object.size(texture.width, texture.height);
 				object.anchor(0.5, 0.5);
@@ -142,7 +146,7 @@ class TableVariableProject extends Entity {
 				var polys = MarchingSquares.run(iso.iso, iso.bounds, Vec2.weak(4, 4), 2);
 				var shapeCount:Int = 0;
 				for (p in polys) {
-					var qolys = p.convexDecomposition(true);
+					var qolys = p.simplify(1.5).convexDecomposition(true);
 					for (q in qolys) {
 						var polygon = new Polygon(q);
 						object.nape.body.shapes.add(polygon);
@@ -168,7 +172,6 @@ class TableVariableProject extends Entity {
 			for (contraint in constraintsLayer.entities) {}
 		}
 		reset();
-		assets.onAssetFilesChange(this, (_,__) -> reset());
 		// assets.texture(Images.PRELOAD__PIECE_TOP).asset.onComplete(this, _ -> reset());
 
 		/*
@@ -285,6 +288,9 @@ class TableVariableProject extends Entity {
 			for (dl in debugLines) {
 				dl.redraw();
 			}
+		});
+		screen.onMouseWheel(this, (x, y) -> {
+			camera.scale(camera.scaleX * (y > 0 ? 1.1 : 0.9), camera.scaleY * (y > 0 ? 1.1 : 0.9));
 		});
 	} // ready
 }
