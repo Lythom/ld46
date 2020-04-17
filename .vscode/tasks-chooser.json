@@ -45,6 +45,50 @@
             }
         },
         {
+            "displayName": "▶︎ SNIPPET_DRAW",
+            "description": "ceramic luxe run web",
+            "tasks": [
+                {
+                    "type": "shell",
+                    "label": "build",
+                    "command": "ceramic",
+                    "presentation": {
+                        "echo": true,
+                        "reveal": "always",
+                        "focus": false,
+                        "panel": "shared"
+                    },
+                    "args": [
+                        "luxe",
+                        "run",
+                        "web",
+                        "--variant SNIPPET_DRAW",
+                        "--setup",
+                        "--assets",
+                        "--vscode-editor",
+                        "--hxml-output",
+                        "completion.hxml"
+                    ],
+                    "group": {
+                        "kind": "build",
+                        "isDefault": true
+                    },
+                    "problemMatcher": "$haxe"
+                }
+            ],
+            "onSelect": {
+                "command": "ceramic",
+                "args": [
+                    "luxe",
+                    "hxml",
+                    "web",
+                    "--setup",
+                    "--output",
+                    "completion.hxml"
+                ]
+            }
+        },
+        {
             "displayName": "▶︎ luxe / Run Web (debug)",
             "description": "ceramic luxe run web --setup --assets --debug",
             "tasks": [
