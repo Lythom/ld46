@@ -53,16 +53,10 @@ class TableVariableProject extends Entity {
 
 	function ready() {
 		assets = new Assets();
-		// assets.addImage(Images.PRELOAD__PIECE_BOTTOM);
-		// assets.addImage(Images.PRELOAD__PIECE_TOP);
-		// assets.addImage(Images.PRELOAD__PIVOTER_COURT);
-		// assets.addImage(Images.PRELOAD__PIVOTER_LONG);
-		// assets.addImage(Images.PRELOAD__TABLE_BASE);
-		// assets.addImage(Texts.PRELOAD__OGMOLEVEL);
 		assets.addAll(~/^preload\//);
 		assets.onceComplete(this, start);
 		assets.load();
-		// assets.watchDirectory(ceramic.macros.DefinesMacro.getDefine('C:\\projets\\ceramictest\\tablevariable\\assets'));
+		assets.watchDirectory('C:\\projets\\ceramictest\\tablevariable\\assets\\preload');
 	}
 
 	function getTextureFromName(name:String):Texture {
@@ -171,9 +165,10 @@ class TableVariableProject extends Entity {
 
 			var constraintsLayer = level.layers.find(l -> l.name == "constraints");
 			for (contraint in constraintsLayer.entities) {}
-        }
-        reset();
-        // assets.onAssetFilesChange(this, (_,__) -> reset);
+		}
+		reset();
+		assets.onAssetFilesChange(this, (_,__) -> reset);
+
 		/*
 
 			function reset() {
