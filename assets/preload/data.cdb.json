@@ -1,7 +1,7 @@
 {
 	"sheets": [
 		{
-			"name": "Entities",
+			"name": "entities",
 			"columns": [
 				{
 					"typeStr": "0",
@@ -20,27 +20,27 @@
 			"lines": [
 				{
 					"id": "Base",
-					"image": "812f3397c9eed14d683c469901a2df07",
+					"image": "",
 					"description": "test"
 				},
 				{
 					"id": "PivoterLong",
-					"image": "dd187de046fc8addd0a16d8c3e858bd6",
+					"image": "",
 					"description": "test"
 				},
 				{
 					"id": "PivoterCourt",
-					"image": "4f12064c5cfa650fd79b8d0ce060fb28",
+					"image": "",
 					"description": "test"
 				},
 				{
 					"id": "PartTop",
-					"image": "79716099a4d302de954254ae3a2e5a08",
+					"image": "",
 					"description": "test"
 				},
 				{
 					"id": "PartBottom",
-					"image": "a408a7eafba75c001a484f425fae1c00",
+					"image": "",
 					"description": "test"
 				}
 			],
@@ -48,7 +48,7 @@
 			"props": {}
 		},
 		{
-			"name": "Forms",
+			"name": "forms",
 			"columns": [
 				{
 					"name": "id",
@@ -162,7 +162,7 @@
 			}
 		},
 		{
-			"name": "Forms@tileProps",
+			"name": "forms@tileProps",
 			"props": {
 				"hide": true
 			},
@@ -171,7 +171,7 @@
 			"columns": []
 		},
 		{
-			"name": "Forms@layers",
+			"name": "forms@layers",
 			"props": {
 				"hide": true
 			},
@@ -189,7 +189,7 @@
 			]
 		},
 		{
-			"name": "Forms@List",
+			"name": "forms@List",
 			"props": {
 				"hide": true
 			},
@@ -197,7 +197,7 @@
 			"lines": [],
 			"columns": [
 				{
-					"typeStr": "6:Entities",
+					"typeStr": "6:entities",
 					"name": "kind"
 				},
 				{

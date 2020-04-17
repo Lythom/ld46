@@ -44,8 +44,8 @@ class TableVariableProject extends Entity {
 		super();
 		settings.antialiasing = 4;
 		settings.background = Color.GRAY;
-		settings.targetWidth = 1680;
-		settings.targetHeight = 1000;
+		settings.targetWidth = 1280;
+		settings.targetHeight = 720;
 		settings.scaling = FILL;
 
 		app.onceReady(this, ready);
@@ -91,11 +91,16 @@ class TableVariableProject extends Entity {
 	function start(success:Bool) {
 		// Hello World?
 		//
+		autorun(() -> {
+			var castleDBContent = assets.text(Texts.PRELOAD__DATA_CDB);
+			Data.load(castleDBContent);
+		});
 
 		var handJoint = new PivotJoint(app.nape.space.world, null, Vec2.weak(), Vec2.weak());
 		var mousePoint = Vec2.get(0, 0);
 		var pointer = new Quad();
-
+		cdb.Module;
+		
 		var camera = new Visual();
 		camera.pos(screen.width * 0.5, screen.height * 0.5);
 
@@ -109,7 +114,10 @@ class TableVariableProject extends Entity {
 		var joints:List<PivotJoint> = new List<PivotJoint>();
 		var debugLines:List<DebugLine> = new List<DebugLine>();
 
-		function reset() {
+		var text:Text = new Text();
+		text.content = Data.entities.get(Data.EntitiesKind.Base).description;
+
+ 		function reset() {
 			trace("do reset");
 			for (quad in objects) {
 				quad.nape.body.space = null;

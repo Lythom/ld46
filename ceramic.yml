@@ -5,7 +5,10 @@ app:
     author: My Company
     version: '1.0'
 
-    libs: ['nape', 'ogmo-3']
+    libs: 
+        - 'nape'
+        - 'ogmo-3'
+        - 'castle'
     hxml: |
         -D ceramic_nape_physics
         -D ceramic_use_electron 
