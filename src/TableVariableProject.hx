@@ -56,7 +56,7 @@ class TableVariableProject extends Entity {
 		assets.addAll(~/^preload\//);
 		assets.onceComplete(this, start);
 		assets.load();
-		assets.watchDirectory('C:\\projets\\ceramictest\\tablevariable\\assets\\preload');
+		assets.watchDirectory('C:\\projets\\ceramictest\\tablevariable\\assets');
 	}
 
 	function getTextureFromName(name:String):Texture {
@@ -109,6 +109,7 @@ class TableVariableProject extends Entity {
 		var joints:List<PivotJoint> = new List<PivotJoint>();
 		var debugLines:List<DebugLine> = new List<DebugLine>();
 		function reset() {
+			trace("do reset");
 			for (quad in objects) {
 				quad.destroy();
 			}
@@ -167,7 +168,8 @@ class TableVariableProject extends Entity {
 			for (contraint in constraintsLayer.entities) {}
 		}
 		reset();
-		assets.onAssetFilesChange(this, (_,__) -> reset);
+		assets.onAssetFilesChange(this, (_,__) -> reset());
+		// assets.texture(Images.PRELOAD__PIECE_TOP).asset.onComplete(this, _ -> reset());
 
 		/*
 
