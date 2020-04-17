@@ -19,10 +19,9 @@
                 "--setup",
                 "--assets",
                 "--vscode-editor",
-                "--hxml-output",
-                "completion.hxml",
                 "--debug",
-                "--no-skip"
+                "--hxml-output",
+                "completion.hxml"
             ],
             "group": {
                 "kind": "build",

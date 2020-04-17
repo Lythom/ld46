@@ -11,7 +11,4 @@ app:
         -D ceramic_use_electron 
     if web:
         +defines:
-            - js-source-map    
-    if SNIPPET_DRAW:
-        +defines:
-            - SNIPPET_DRAW
+            - js-source-map
