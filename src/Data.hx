@@ -1,1 +1,1 @@
-private typedef Init = haxe.macro.MacroType<[cdb.Module.build("assets/preload/data.cdb.json")]>;
+private typedef Init = haxe.macro.MacroType<[cdb.Module.build("../assets/preload/cdb.json")]>;

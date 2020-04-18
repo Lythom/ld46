@@ -1,5 +1,6 @@
 package;
 
+import luxe.importers.obj.Reader;
 import haxe.ds.StringMap;
 import ceramic.Texture;
 import ceramic.Images;
@@ -89,18 +90,18 @@ class TableVariableProject extends Entity {
 	}
 
 	function start(success:Bool) {
-		// Hello World?
-		//
-		autorun(() -> {
-			var castleDBContent = assets.text(Texts.PRELOAD__DATA_CDB);
+
+		new HotLoader(() -> {
+			var castleDBContent = assets.text(Texts.PRELOAD__CDB);
 			Data.load(castleDBContent);
 		});
+
+		var text:Text = new Text();
 
 		var handJoint = new PivotJoint(app.nape.space.world, null, Vec2.weak(), Vec2.weak());
 		var mousePoint = Vec2.get(0, 0);
 		var pointer = new Quad();
-		cdb.Module;
-		
+
 		var camera = new Visual();
 		camera.pos(screen.width * 0.5, screen.height * 0.5);
 
@@ -114,10 +115,7 @@ class TableVariableProject extends Entity {
 		var joints:List<PivotJoint> = new List<PivotJoint>();
 		var debugLines:List<DebugLine> = new List<DebugLine>();
 
-		var text:Text = new Text();
-		text.content = Data.entities.get(Data.EntitiesKind.Base).description;
-
- 		function reset() {
+		function reset() {
 			trace("do reset");
 			for (quad in objects) {
 				quad.nape.body.space = null;
@@ -141,8 +139,8 @@ class TableVariableProject extends Entity {
 				var object = new Quad();
 				var texture:Texture = getTextureFromName(name);
 				texture.asset.offReplaceTexture();
-				texture.asset.onReplaceTexture(this, (_,__) -> reset());
-				
+				texture.asset.onReplaceTexture(this, (_, __) -> reset());
+
 				object.texture = texture;
 				object.size(texture.width, texture.height);
 				object.anchor(0.5, 0.5);
@@ -300,6 +298,13 @@ class TableVariableProject extends Entity {
 		screen.onMouseWheel(this, (x, y) -> {
 			camera.scale(camera.scaleX * (y > 0 ? 1.1 : 0.9), camera.scaleY * (y > 0 ? 1.1 : 0.9));
 		});
+
+		function reload() {
+			text.content = Data.entities.all[0].description;
+			new ceramic.Particles();
+		}
+		HotLoader.instance.onReload(this, reload);
+		reload();
 	} // ready
 }
 

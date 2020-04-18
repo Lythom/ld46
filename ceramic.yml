@@ -7,11 +7,11 @@ app:
 
     libs: 
         - 'nape'
-        - 'ogmo-3'
         - 'castle'
     hxml: |
         -D ceramic_nape_physics
         -D ceramic_use_electron 
+        --macro nullSafety("ld46", Strict)
     if web:
         +defines:
             - js-source-map
