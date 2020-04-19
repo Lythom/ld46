@@ -3,12 +3,14 @@ package ld46.model;
 import tracker.Model;
 
 class Battle extends Model {
-	var playerA:Player;
-    var playerB:Player;
+	public var playerA:Player;
+    public var playerB:Player;
     
-    var winner:Player = null;
+    public var winner:Null<Player> = null;
 
-	public function new() {
+	public function new(playerA:Player,playerB:Player) {
 		super();
+		this.playerA = playerA;
+		this.playerB = playerB;
 	}
 }

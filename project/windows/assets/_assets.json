@@ -1,0 +1,94 @@
+{
+    "assets": [
+        {
+            "name": "Arial20.fnt"
+        },
+        {
+            "name": "Arial20.png"
+        },
+        {
+            "name": "Arial20@2x.fnt"
+        },
+        {
+            "name": "Arial20@2x.png"
+        },
+        {
+            "name": "cdb.json"
+        },
+        {
+            "name": "color.frag"
+        },
+        {
+            "name": "color.vert"
+        },
+        {
+            "name": "fxaa.frag"
+        },
+        {
+            "name": "fxaa.vert"
+        },
+        {
+            "name": "hybrid.frag"
+        },
+        {
+            "name": "hybrid.vert"
+        },
+        {
+            "name": "pixelArt.frag"
+        },
+        {
+            "name": "pixelArt.vert"
+        },
+        {
+            "name": "preload/arena.png"
+        },
+        {
+            "name": "preload/arena.tsx"
+        },
+        {
+            "name": "preload/dummy.png"
+        },
+        {
+            "name": "preload/dummy.tsx"
+        },
+        {
+            "name": "preload/hat.png"
+        },
+        {
+            "name": "preload/Images.tsx"
+        },
+        {
+            "name": "preload/mainBoard.png"
+        },
+        {
+            "name": "preload/map.tmx"
+        },
+        {
+            "name": "preload/nextRoundButton.png"
+        },
+        {
+            "name": "preload/shelf.png"
+        },
+        {
+            "name": "preload/shop.png"
+        },
+        {
+            "name": "preload/trash.png"
+        },
+        {
+            "name": "textured.frag"
+        },
+        {
+            "name": "textured.vert"
+        },
+        {
+            "name": "tintBlack.frag"
+        },
+        {
+            "name": "tintBlack.vert"
+        },
+        {
+            "name": "white.png"
+        }
+    ]
+}

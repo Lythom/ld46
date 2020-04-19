@@ -1,0 +1,865 @@
+[{
+	access: [APrivate]
+	doc: null
+	kind: FVar(TPath({
+		name: Assets
+		pack: []
+		params: []
+		sub: null
+	}), null)
+	meta: []
+	name: assets
+	pos: #pos
+}, {
+	access: [APrivate]
+	doc: null
+	kind: FVar(TPath({
+		name: Shop
+		pack: []
+		params: []
+		sub: null
+	}), null)
+	meta: []
+	name: shop
+	pos: #pos
+}, {
+	access: [APrivate]
+	doc: null
+	kind: FVar(TPath({
+		name: Text
+		pack: []
+		params: []
+		sub: null
+	}), null)
+	meta: []
+	name: creditsText
+	pos: #pos
+}, {
+	access: [APrivate]
+	doc: null
+	kind: FVar(TPath({
+		name: List
+		pack: []
+		params: [TPType(TPath({
+			name: SorcererItemActor
+			pack: []
+			params: []
+			sub: null
+		}))]
+		sub: null
+	}), null)
+	meta: []
+	name: items
+	pos: #pos
+}, {
+	access: [APrivate]
+	doc: null
+	kind: FVar(TFunction([TPath({
+		name: SorcererItem
+		pack: []
+		params: []
+		sub: null
+	})], TPath({
+		name: SorcererItemActor
+		pack: []
+		params: []
+		sub: null
+	})), null)
+	meta: []
+	name: getItemActor
+	pos: #pos
+}, {
+	access: [APrivate]
+	doc: purchaseItem event
+	kind: FFun({
+		args: [{
+			meta: []
+			name: item
+			opt: false
+			type: null
+			value: null
+		}]
+		expr: {
+			expr: EBlock([])
+			pos: #pos
+		}
+		params: null
+		ret: TPath({
+			name: Void
+			pack: []
+			params: []
+			sub: null
+		})
+	})
+	meta: []
+	name: emitPurchaseItem
+	pos: #pos
+}, {
+	access: [APublic]
+	doc: purchaseItem event
+	kind: FFun({
+		args: [{
+			meta: null
+			name: owner
+			opt: false
+			type: TPath({
+				name: Entity
+				pack: [ceramic]
+				params: []
+				sub: null
+			})
+			value: null
+		}, {
+			meta: null
+			name: handleItem
+			opt: null
+			type: TFunction([null <- expected enum value], TPath({
+				name: Void
+				pack: []
+				params: []
+				sub: null
+			}))
+			value: null
+		}]
+		expr: {
+			expr: EBlock([])
+			pos: #pos
+		}
+		params: null
+		ret: TPath({
+			name: Void
+			pack: []
+			params: []
+			sub: null
+		})
+	})
+	meta: []
+	name: onPurchaseItem
+	pos: #pos
+}, {
+	access: [APublic]
+	doc: purchaseItem event
+	kind: FFun({
+		args: [{
+			meta: null
+			name: owner
+			opt: false
+			type: TPath({
+				name: Entity
+				pack: [ceramic]
+				params: []
+				sub: null
+			})
+			value: null
+		}, {
+			meta: null
+			name: handleItem
+			opt: null
+			type: TFunction([null <- expected enum value], TPath({
+				name: Void
+				pack: []
+				params: []
+				sub: null
+			}))
+			value: null
+		}]
+		expr: {
+			expr: EBlock([])
+			pos: #pos
+		}
+		params: null
+		ret: TPath({
+			name: Void
+			pack: []
+			params: []
+			sub: null
+		})
+	})
+	meta: []
+	name: oncePurchaseItem
+	pos: #pos
+}, {
+	access: [APublic]
+	doc: purchaseItem event
+	kind: FFun({
+		args: [{
+			meta: null
+			name: handleItem
+			opt: true
+			type: TFunction([null <- expected enum value], TPath({
+				name: Void
+				pack: []
+				params: []
+				sub: null
+			}))
+			value: null
+		}]
+		expr: {
+			expr: EBlock([])
+			pos: #pos
+		}
+		params: null
+		ret: TPath({
+			name: Void
+			pack: []
+			params: []
+			sub: null
+		})
+	})
+	meta: []
+	name: offPurchaseItem
+	pos: #pos
+}, {
+	access: [APublic, AInline]
+	doc: Does it listen to purchaseItem event
+	kind: FFun({
+		args: []
+		expr: {
+			expr: EBlock([{
+				expr: EReturn({
+					expr: EConst(CIdent(false))
+					pos: #pos
+				})
+				pos: #pos
+			}])
+			pos: #pos
+		}
+		params: null
+		ret: TPath({
+			name: Bool
+			pack: []
+			params: []
+			sub: null
+		})
+	})
+	meta: []
+	name: listensPurchaseItem
+	pos: #pos
+}, {
+	access: [APublic]
+	doc: null
+	kind: FFun({
+		args: [{
+			meta: []
+			name: assets
+			opt: false
+			type: TPath({
+				name: Assets
+				pack: []
+				params: []
+				sub: null
+			})
+			value: null
+		}, {
+			meta: []
+			name: shop
+			opt: false
+			type: TPath({
+				name: Shop
+				pack: []
+				params: []
+				sub: null
+			})
+			value: null
+		}, {
+			meta: []
+			name: getItemActor
+			opt: false
+			type: TFunction([TPath({
+				name: SorcererItem
+				pack: []
+				params: []
+				sub: null
+			})], TPath({
+				name: SorcererItemActor
+				pack: []
+				params: []
+				sub: null
+			}))
+			value: null
+		}]
+		expr: {
+			expr: EBlock([{
+				expr: ECall({
+					expr: EConst(CIdent(super))
+					pos: #pos
+				}, [])
+				pos: #pos
+			}, {
+				expr: EBinop(OpAssign, {
+					expr: EField({
+						expr: EConst(CIdent(this))
+						pos: #pos
+					}, assets)
+					pos: #pos
+				}, {
+					expr: EConst(CIdent(assets))
+					pos: #pos
+				})
+				pos: #pos
+			}, {
+				expr: EBinop(OpAssign, {
+					expr: EField({
+						expr: EConst(CIdent(this))
+						pos: #pos
+					}, shop)
+					pos: #pos
+				}, {
+					expr: EConst(CIdent(shop))
+					pos: #pos
+				})
+				pos: #pos
+			}, {
+				expr: EBinop(OpAssign, {
+					expr: EField({
+						expr: EConst(CIdent(this))
+						pos: #pos
+					}, getItemActor)
+					pos: #pos
+				}, {
+					expr: EConst(CIdent(getItemActor))
+					pos: #pos
+				})
+				pos: #pos
+			}, {
+				expr: EBinop(OpAssign, {
+					expr: EField({
+						expr: EConst(CIdent(this))
+						pos: #pos
+					}, creditsText)
+					pos: #pos
+				}, {
+					expr: ENew({
+						name: Text
+						pack: []
+						params: []
+						sub: null
+					}, [])
+					pos: #pos
+				})
+				pos: #pos
+			}, {
+				expr: ECall({
+					expr: EConst(CIdent(refreshItems))
+					pos: #pos
+				}, [{
+					expr: EField({
+						expr: EConst(CIdent(shop))
+						pos: #pos
+					}, draw)
+					pos: #pos
+				}, {
+					expr: EConst(CIdent(null))
+					pos: #pos
+				}])
+				pos: #pos
+			}, {
+				expr: EBinop(OpAssign, {
+					expr: EField({
+						expr: EConst(CIdent(this))
+						pos: #pos
+					}, texture)
+					pos: #pos
+				}, {
+					expr: ECall({
+						expr: EField({
+							expr: EConst(CIdent(assets))
+							pos: #pos
+						}, texture)
+						pos: #pos
+					}, [{
+						expr: EField({
+							expr: EConst(CIdent(Images))
+							pos: #pos
+						}, PRELOAD__SHOP)
+						pos: #pos
+					}])
+					pos: #pos
+				})
+				pos: #pos
+			}, {
+				expr: ECall({
+					expr: EField({
+						expr: EField({
+							expr: EConst(CIdent(this))
+							pos: #pos
+						}, shop)
+						pos: #pos
+					}, onCreditsChange)
+					pos: #pos
+				}, [{
+					expr: EConst(CIdent(this))
+					pos: #pos
+				}, {
+					expr: EFunction(FArrow, {
+						args: [{
+							meta: []
+							name: credits
+							opt: false
+							type: null
+							value: null
+						}, {
+							meta: []
+							name: _
+							opt: false
+							type: null
+							value: null
+						}]
+						expr: {
+							expr: EMeta({
+								name: :implicitReturn
+								params: []
+								pos: #pos
+							}, {
+								expr: EReturn({
+									expr: EBlock([{
+										expr: EBinop(OpAssign, {
+											expr: EField({
+												expr: EField({
+													expr: EConst(CIdent(this))
+													pos: #pos
+												}, creditsText)
+												pos: #pos
+											}, content)
+											pos: #pos
+										}, {
+											expr: ECall({
+												expr: EField({
+													expr: EConst(CIdent(Std))
+													pos: #pos
+												}, string)
+												pos: #pos
+											}, [{
+												expr: EConst(CIdent(credits))
+												pos: #pos
+											}])
+											pos: #pos
+										})
+										pos: #pos
+									}])
+									pos: #pos
+								})
+								pos: #pos
+							})
+							pos: #pos
+						}
+						params: []
+						ret: null
+					})
+					pos: #pos
+				}])
+				pos: #pos
+			}, {
+				expr: ECall({
+					expr: EField({
+						expr: EField({
+							expr: EConst(CIdent(this))
+							pos: #pos
+						}, shop)
+						pos: #pos
+					}, onDrawChange)
+					pos: #pos
+				}, [{
+					expr: EConst(CIdent(this))
+					pos: #pos
+				}, {
+					expr: EConst(CIdent(refreshItems))
+					pos: #pos
+				}])
+				pos: #pos
+			}])
+			pos: #pos
+		}
+		params: []
+		ret: null
+	})
+	meta: []
+	name: new
+	pos: #pos
+}, {
+	access: []
+	doc: null
+	kind: FFun({
+		args: [{
+			meta: []
+			name: newDraw
+			opt: false
+			type: TPath({
+				name: List
+				pack: []
+				params: [TPType(TPath({
+					name: SorcererItem
+					pack: []
+					params: []
+					sub: null
+				}))]
+				sub: null
+			})
+			value: null
+		}, {
+			meta: []
+			name: previousDraw
+			opt: false
+			type: TPath({
+				name: List
+				pack: []
+				params: [TPType(TPath({
+					name: SorcererItem
+					pack: []
+					params: []
+					sub: null
+				}))]
+				sub: null
+			})
+			value: null
+		}]
+		expr: {
+			expr: EBlock([{
+				expr: EVars([{
+					expr: {
+						expr: EField({
+							expr: ECall({
+								expr: EField({
+									expr: ECall({
+										expr: EField({
+											expr: EField({
+												expr: EConst(CIdent(Data))
+												pos: #pos
+											}, placements)
+											pos: #pos
+										}, get)
+										pos: #pos
+									}, [{
+										expr: EConst(CIdent(ShelfPadding))
+										pos: #pos
+									}])
+									pos: #pos
+								}, sure)
+								pos: #pos
+							}, [])
+							pos: #pos
+						}, x)
+						pos: #pos
+					}
+					isFinal: false
+					name: padding
+					type: null
+				}])
+				pos: #pos
+			}, {
+				expr: EBinop(OpAssign, {
+					expr: EField({
+						expr: EConst(CIdent(this))
+						pos: #pos
+					}, items)
+					pos: #pos
+				}, {
+					expr: ECall({
+						expr: EField({
+							expr: EConst(CIdent(newDraw))
+							pos: #pos
+						}, map)
+						pos: #pos
+					}, [{
+						expr: EFunction(FArrow, {
+							args: [{
+								meta: []
+								name: item
+								opt: false
+								type: null
+								value: null
+							}]
+							expr: {
+								expr: EMeta({
+									name: :implicitReturn
+									params: []
+									pos: #pos
+								}, {
+									expr: EReturn({
+										expr: ECall({
+											expr: EConst(CIdent(getItemActor))
+											pos: #pos
+										}, [{
+											expr: EConst(CIdent(item))
+											pos: #pos
+										}])
+										pos: #pos
+									})
+									pos: #pos
+								})
+								pos: #pos
+							}
+							params: []
+							ret: null
+						})
+						pos: #pos
+					}])
+					pos: #pos
+				})
+				pos: #pos
+			}, {
+				expr: EFor({
+					expr: EBinop(OpArrow, {
+						expr: EConst(CIdent(i))
+						pos: #pos
+					}, {
+						expr: EBinop(OpIn, {
+							expr: EConst(CIdent(actor))
+							pos: #pos
+						}, {
+							expr: EField({
+								expr: EConst(CIdent(this))
+								pos: #pos
+							}, items)
+							pos: #pos
+						})
+						pos: #pos
+					})
+					pos: #pos
+				}, {
+					expr: EBlock([{
+						expr: ECall({
+							expr: EField({
+								expr: EConst(CIdent(actor))
+								pos: #pos
+							}, transition)
+							pos: #pos
+						}, [{
+							expr: EField({
+								expr: EConst(CIdent(Easing))
+								pos: #pos
+							}, QUAD_EASE_IN_OUT)
+							pos: #pos
+						}, {
+							expr: EConst(CFloat(0.15))
+							pos: #pos
+						}, {
+							expr: EFunction(FArrow, {
+								args: [{
+									meta: []
+									name: props
+									opt: false
+									type: null
+									value: null
+								}]
+								expr: {
+									expr: EMeta({
+										name: :implicitReturn
+										params: []
+										pos: #pos
+									}, {
+										expr: EReturn({
+											expr: EBlock([{
+												expr: EBinop(OpAssign, {
+													expr: EField({
+														expr: EConst(CIdent(props))
+														pos: #pos
+													}, x)
+													pos: #pos
+												}, {
+													expr: EBinop(OpAdd, {
+														expr: EConst(CIdent(padding))
+														pos: #pos
+													}, {
+														expr: EBinop(OpMult, {
+															expr: EParenthesis({
+																expr: EBinop(OpAdd, {
+																	expr: EField({
+																		expr: EField({
+																			expr: EConst(CIdent(actor))
+																			pos: #pos
+																		}, texture)
+																		pos: #pos
+																	}, width)
+																	pos: #pos
+																}, {
+																	expr: EConst(CIdent(padding))
+																	pos: #pos
+																})
+																pos: #pos
+															})
+															pos: #pos
+														}, {
+															expr: EConst(CIdent(i))
+															pos: #pos
+														})
+														pos: #pos
+													})
+													pos: #pos
+												})
+												pos: #pos
+											}, {
+												expr: EBinop(OpAssign, {
+													expr: EField({
+														expr: EConst(CIdent(props))
+														pos: #pos
+													}, y)
+													pos: #pos
+												}, {
+													expr: EBinop(OpDiv, {
+														expr: EField({
+															expr: EField({
+																expr: EConst(CIdent(this))
+																pos: #pos
+															}, texture)
+															pos: #pos
+														}, height)
+														pos: #pos
+													}, {
+														expr: EConst(CInt(2))
+														pos: #pos
+													})
+													pos: #pos
+												})
+												pos: #pos
+											}])
+											pos: #pos
+										})
+										pos: #pos
+									})
+									pos: #pos
+								}
+								params: []
+								ret: null
+							})
+							pos: #pos
+						}])
+						pos: #pos
+					}, {
+						expr: ECall({
+							expr: EField({
+								expr: EConst(CIdent(actor))
+								pos: #pos
+							}, offPointerUp)
+							pos: #pos
+						}, [])
+						pos: #pos
+					}, {
+						expr: ECall({
+							expr: EField({
+								expr: EConst(CIdent(actor))
+								pos: #pos
+							}, onPointerDown)
+							pos: #pos
+						}, [{
+							expr: EConst(CIdent(this))
+							pos: #pos
+						}, {
+							expr: EFunction(FArrow, {
+								args: [{
+									meta: []
+									name: evt
+									opt: false
+									type: null
+									value: null
+								}]
+								expr: {
+									expr: EMeta({
+										name: :implicitReturn
+										params: []
+										pos: #pos
+									}, {
+										expr: EReturn({
+											expr: EBlock([{
+												expr: EVars([{
+													expr: {
+														expr: ECall({
+															expr: EField({
+																expr: EConst(CIdent(shop))
+																pos: #pos
+															}, buy)
+															pos: #pos
+														}, [{
+															expr: EField({
+																expr: EConst(CIdent(actor))
+																pos: #pos
+															}, item)
+															pos: #pos
+														}])
+														pos: #pos
+													}
+													isFinal: false
+													name: bought
+													type: null
+												}])
+												pos: #pos
+											}, {
+												expr: EIf({
+													expr: EConst(CIdent(bought))
+													pos: #pos
+												}, {
+													expr: EBlock([{
+														expr: EConst(CIdent(shelf))
+														pos: #pos
+													}])
+													pos: #pos
+												}, null)
+												pos: #pos
+											}])
+											pos: #pos
+										})
+										pos: #pos
+									})
+									pos: #pos
+								}
+								params: []
+								ret: null
+							})
+							pos: #pos
+						}])
+						pos: #pos
+					}])
+					pos: #pos
+				})
+				pos: #pos
+			}])
+			pos: #pos
+		}
+		params: []
+		ret: null
+	})
+	meta: []
+	name: refreshItems
+	pos: #pos
+}, {
+	access: [APublic, AOverride]
+	doc: 
+	kind: FFun({
+		args: []
+		expr: {
+			expr: EBlock([{
+				expr: ECall({
+					expr: EField({
+						expr: EConst(CIdent(super))
+						pos: #pos
+					}, unbindEvents)
+					pos: #pos
+				}, [])
+				pos: #pos
+			}, {
+				expr: ECall({
+					expr: EField({
+						expr: EConst(CIdent(this))
+						pos: #pos
+					}, offPurchaseItem)
+					pos: #pos
+				}, [])
+				pos: #pos
+			}])
+			pos: #pos
+		}
+		params: null
+		ret: TPath({
+			name: Void
+			pack: []
+			params: []
+			sub: null
+		})
+	})
+	meta: []
+	name: unbindEvents
+	pos: #pos
+}]
+line 116: expected enum value
+line 158: expected enum value
+line 189: expected enum value

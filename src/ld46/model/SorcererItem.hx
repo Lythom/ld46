@@ -7,7 +7,7 @@ class SorcererItem extends Item {
 	public static function createBonus(definition:Data.Items_provideBonus):Bonus {
 		return new Bonus(args -> {
             var statName = definition.stat.id.toString();
-            return [statName => args.values.get(statName) * definition.percentValue + definition.flatValue];
+            return [statName => args.values.get(statName).or(0) * definition.percentValue + definition.flatValue];
 		});
     }
     

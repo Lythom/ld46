@@ -10,7 +10,6 @@ import ceramic.Shortcuts.*;
 
 using NullTools;
 
-@:nullSafety(Strict)
 class Project extends Entity {
 	var assets:Assets;
 
@@ -23,7 +22,6 @@ class Project extends Entity {
 			settings.targetWidth = 1280;
 			settings.targetHeight = 720;
 			settings.scaling = FILL;
-			tracker.Model;
 
 			assets = new Assets();
 
@@ -34,15 +32,16 @@ class Project extends Entity {
 	function ready() {
 		assets.watchDirectory(ceramic.macros.DefinesMacro.getDefine('assets_path'));
 		assets.addAll(~/^preload\//);
+		assets.add(Texts.CDB);
 		assets.onceComplete(this, start);
 		assets.load();
 	}
 
 	function start(success:Bool) {
 		new HotLoader(() -> {
-			var castleDBContent = assets.text(Texts.PRELOAD__CDB);
+			var castleDBContent = assets.text(Texts.CDB);
 			Data.load(castleDBContent);
 		});
-		new ld46.Main(assets);
+		new ld46.MainMenu(assets);
 	}
 }
