@@ -1,5 +1,6 @@
 package ld46.model;
 
+import haxe.ds.StringMap;
 import ceramic.Assets;
 import ceramic.Point;
 import tracker.Model;
@@ -21,41 +22,70 @@ class Player extends Model {
 	@observe public var shop:Shop;
 	@observe public var shelf:Shelf;
 
-	// configuration origin is the center of the player half field
-	// positive value down and right
-	// relates to positions while being bot-side. positions are mirrored if playing topside.
-	var sorcerersConfiguration:Array<Point>;
-	var chaleaceConfiguration:Point;
-
 	public function new(playerName:String) {
 		super();
 		this.gameState = ShopEquip;
 		this.playerName = playerName;
 		battles = new List<Battle>();
 		sorcerers = new List<Sorcerer>();
-		sorcerers.add(new Sorcerer());
-		sorcerers.add(new Sorcerer());
-		sorcerers.add(new Sorcerer());
 		chaleace = new Chaleace();
 		shop = new Shop();
 		shelf = new Shelf();
 
-		chaleaceConfiguration = new Point(0, 0);
-		sorcerersConfiguration = [new Point(60, 0), new Point(-20, 40), new Point(-30, 30),];
-		resetPositionsToPlayerConfiguration();
+		var sorc = new Sorcerer();
+		sorcerers.add(sorc);
+		sorc.boardConfiguredX = 120;
+		sorc.boardConfiguredY = 0;
+
+		sorc = new Sorcerer();
+		sorcerers.add(sorc);
+		sorc.boardConfiguredX = -40;
+		sorc.boardConfiguredY = 80;
+
+		sorc = new Sorcerer();
+		sorcerers.add(sorc);
+		sorc.boardConfiguredX = -30;
+		sorc.boardConfiguredY = 30;
+
+		var counts = new StringMap<Int>();
+		shelf.onItemsChange(this, (current, _) -> {
+			counts.clear();
+			for (item in current) {
+				var id = item.itemData.id.toString();
+				counts.set(id, counts.exists(id) ? counts.get(id) + 1 : 1);
+			}
+			for (id => count in counts) {
+				if (count >= 3) {
+					var mergeables = current.filter(item -> item.itemData.id.toString() == id);
+					var merged = mergeables.pop();
+					merged.level++;
+					var outs = [mergeables.pop(), mergeables.pop()];
+					for (out in outs) {
+						shelf.remove(out);
+						out.triggerMergeInto(merged);
+					}
+				}
+			}
+		});
+
+		autorun(() -> {
+			for (sorc in sorcerers) {
+				sorc.fighting = gameState != ShopEquip;
+				chaleace.fighting = gameState != ShopEquip;
+			}
+			if (gameState == ShopEquip) {
+				for (sorc in sorcerers) {
+					sorc.x = sorc.boardConfiguredX;
+					sorc.y = sorc.boardConfiguredY;
+				}
+				chaleace.x = chaleace.boardConfiguredX;
+				chaleace.y = chaleace.boardConfiguredY;
+			}
+		});
 	}
 
 	public function isWinnerOfLastBattle():Bool {
 		var lastBattle:Null<Battle> = battles.last();
 		return lastBattle == null || lastBattle.winner == this;
-	}
-
-	public function resetPositionsToPlayerConfiguration() {
-		for (idxSorc => sorc in sorcerers) {
-			sorc.x = sorcerersConfiguration[idxSorc].x;
-			sorc.y = sorcerersConfiguration[idxSorc].y;
-		}
-		chaleace.x = chaleaceConfiguration.x;
-		chaleace.y = chaleaceConfiguration.y;
 	}
 }

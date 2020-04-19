@@ -23,10 +23,19 @@ class Shelf extends Model {
 		return true;
 	}
 
+	public function putOnHiddenTemporarySlot(item:SorcererItem):Void {
+		items.add(item);
+		this.invalidateItems();
+	}
+
 	public function remove(item:SorcererItem):Bool {
 		var res = items.remove(item);
 		if (res)
 			this.invalidateItems();
 		return res;
+	}
+
+	public function hasHiddenTempItem():Bool {
+		return items.length > Data.configs.get(ShelfSize).sure().value;
 	}
 }

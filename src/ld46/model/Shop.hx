@@ -10,6 +10,7 @@ class Shop extends Model {
 	public function new() {
 		super();
 		draw = new List<SorcererItem>();
+		
 	}
 
 	public function drawItems(game:SorcererTournament) {

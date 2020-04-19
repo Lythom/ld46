@@ -10,6 +10,8 @@ import ceramic.Shortcuts.*;
 
 using NullTools;
 
+// TODO: abstract type for stats String to Statkind conversion
+
 class Project extends Entity {
 	var assets:Assets;
 

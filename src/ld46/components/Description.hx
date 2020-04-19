@@ -13,21 +13,21 @@ class Description extends Quad {
 		bg = new Quad();
 		bg.color = Color.BLACK;
 		bg.alpha = 0.8;
-		bg.size(320, 400);
+		bg.size(320, 320);
 		bg.anchor(0, 0);
 		bg.pos(0, 0);
 
 		text = new Text();
 		text.anchor(0, 0);
 		text.pos(20, 20);
-		text.size(280, 360);
+		text.size(280, 280);
 		text.content = textStr;
 		text.fitWidth = 280;
 
 		add(bg);
 		add(text);
 
-		this.size(320, 400);
+		this.size(320, 320);
 		this.anchor(1, 1);
 	}
 }

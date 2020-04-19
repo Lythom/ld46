@@ -1,5 +1,6 @@
 package ld46.components;
 
+import ceramic.Color;
 import ceramic.Easing;
 import ld46.model.SorcererItem;
 import ceramic.Text;
@@ -14,6 +15,7 @@ class ShopActor extends Quad {
 	private var assets:Assets;
 	private var shop:Shop;
 	private var creditsText:Text;
+	private var creditsTextBg:Quad;
 	private var items:List<SorcererItemActor>;
 
 	private var getItemActor:SorcererItem->SorcererItemActor;
@@ -26,13 +28,24 @@ class ShopActor extends Quad {
 		this.shop = shop;
 		this.getItemActor = getItemActor;
 		this.creditsText = new Text();
+		this.creditsTextBg = new Quad();
 		this.items = shop.draw.map(item -> getItemActor(item));
 		this.texture = assets.texture(Images.PRELOAD__SHOP);
 
 		refreshItems(shop.draw, null);
 
-		this.shop.onCreditsChange(this, (credits, _) -> {
-			this.creditsText.content = Std.string(credits);
+		creditsText.pointSize = 48;
+		creditsText.pos(this.width - creditsText.width / 2 - 10, -creditsText.height - 10);
+		add(creditsText);
+		creditsTextBg.color = Color.BLACK;
+		creditsTextBg.alpha = 0.8;
+		creditsTextBg.size(creditsText.width + 20, creditsText.height + 20);
+		creditsTextBg.pos(creditsText.x, creditsText.y);
+		creditsTextBg.depth = -1;
+		add(creditsTextBg);
+
+		autorun(() -> {
+			this.creditsText.content = Std.string(shop.credits);
 		});
 		this.shop.onDrawChange(this, refreshItems);
 	}

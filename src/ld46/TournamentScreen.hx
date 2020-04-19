@@ -1,43 +1,32 @@
 package ld46;
 
-import ld46.model.SorcererItem;
-import ld46.components.SorcererItemActor;
-import haxe.ds.StringMap;
 import ld46.components.ShopActor;
 import ld46.components.TrashActor;
-import ld46.components.ChaleaceActor;
-import ld46.components.SorcererActor;
 import ld46.components.Board;
 import ld46.components.NextRoundButton;
 import ld46.components.ShelfActor;
 import ld46.model.Player;
-import ld46.model.SorcererTournament;
-import ceramic.KeyCode;
-import ceramic.Key;
-import ceramic.Path;
-import ceramic.Images;
 import ceramic.Assets;
-import ceramic.Quad;
 import ceramic.Text;
 import ceramic.Visual;
-import ceramic.Shortcuts.*;
 
 @:nullSafety(Off)
 class TournamentScreen extends Visual {
 	var assets:Assets;
-	var localPlayer:Player;
+	var itemActorDirector:ItemActorDirector;
+
+	public var localPlayer:Player;
+
 	var allPlayers:Player;
 
 	var shop:ShopActor;
 	var shelf:ShelfActor;
 	var nextRoundButton:NextRoundButton;
 	var mainBoard:Board;
-	var opponentBoard:Board;
-	var sorcerers:Array<SorcererActor>;
-	var chaleace:ChaleaceActor;
+	var opponentBoard:Null<Board>;
+
 	var trash:TrashActor;
 	var playersScores:Text;
-	var items:StringMap<SorcererItemActor>;
 
 	public function new(assets:Assets, localPlayer:Player, allPlayers:Array<Player>) {
 		super();
@@ -45,19 +34,22 @@ class TournamentScreen extends Visual {
 		this.localPlayer = localPlayer;
 		this.allPlayers = localPlayer;
 
+		this.itemActorDirector = new ItemActorDirector(assets);
+
 		nextRoundButton = new NextRoundButton(assets);
-		mainBoard = new Board(assets.texture(Images.PRELOAD__MAIN_BOARD));
-		opponentBoard = new Board(assets.texture(Images.PRELOAD__MAIN_BOARD));
-		sorcerers = new Array<SorcererActor>();
-		for (s in localPlayer.sorcerers) {
-			sorcerers.push(new SorcererActor(assets, s));
-		}
-		chaleace = new ChaleaceActor(assets, localPlayer.chaleace);
+		mainBoard = new Board(assets, localPlayer, this.itemActorDirector);
 		trash = new TrashActor(assets);
 		playersScores = new Text();
-		items = new StringMap<SorcererItemActor>();
-		shop = new ShopActor(assets, localPlayer.shop, getItemActor);
-		shelf = new ShelfActor(assets, localPlayer.shelf, getItemActor);
+
+		shop = new ShopActor(assets, localPlayer.shop, itemActorDirector.getItemActor);
+		shelf = new ShelfActor(assets, localPlayer.shelf, itemActorDirector.getItemActor);
+
+		add(mainBoard);
+		add(trash);
+		add(shop);
+		add(shelf);
+		add(playersScores);
+		add(nextRoundButton);
 
 		nextRoundButton.onPointerDown(this, evt -> {
 			localPlayer.shop.drawItems(SorcererTournament.debugInstance);
@@ -69,8 +61,17 @@ class TournamentScreen extends Visual {
 			var hasRoom = localPlayer.shelf.put(item);
 			if (hasRoom) {
 				localPlayer.shop.processPurchase(item);
+			} else {
+				localPlayer.shelf.putOnHiddenTemporarySlot(item);
+				// will trigger merge if any and free the hidden slot. Else, remove it from shelf.
+				if (localPlayer.shelf.hasHiddenTempItem()) {
+					trace("was on shelf but has not been merged: removed.");
+					localPlayer.shelf.remove(item);
+				}
 			}
 		});
+
+		localPlayer.onGameStateChange(this, (_, __) -> updatePlacements());
 
 		app.onKeyDown(this, e -> {
 			if (e.keyCode == KeyCode.ESCAPE) {
@@ -78,27 +79,49 @@ class TournamentScreen extends Visual {
 				new MainMenu(assets);
 			}
 		});
-		HotLoader.instance.onReload(this, loadContent);
+		HotLoader.instance.onReload(this, updatePlacements);
 
-		loadContent();
+		updatePlacements();
 
 		// var tournament = new SorcererTournament();
 	}
 
-	function getItemActor(item:SorcererItem):SorcererItemActor {
-		if (items.exists(item.id))
-			return items.get(item.id).sure();
-		var itemActor = new SorcererItemActor(this.assets, item);
-		items.set(item.id, itemActor);
-		return itemActor;
+	function updatePlacements() {
+		if (localPlayer.gameState == ShopEquip) {
+			if (opponentBoard != null)
+				transitionDisable(opponentBoard, Data.placements.get(OpponentBoard).sure(), 1000, -500);
+			transitionActivate(mainBoard, Data.placements.get(MainBoardShop).sure(), 0, 0);
+			transitionActivate(shop, Data.placements.get(Shop).sure(), 1000, 0);
+			transitionActivate(shelf, Data.placements.get(Shelf).sure(), 0, 500);
+			transitionActivate(trash, Data.placements.get(Trash).sure(), -500, 0);
+		} else {
+			if (opponentBoard != null)
+				transitionActivate(opponentBoard, Data.placements.get(OpponentBoard).sure(), -1000, 500);
+			transitionDisable(mainBoard, Data.placements.get(MainBoardShop).sure(), 0, 0);
+			transitionDisable(shop, Data.placements.get(Shop).sure(), -1000, 0);
+			transitionDisable(shelf, Data.placements.get(Shelf).sure(), 0, -500);
+			transitionDisable(trash, Data.placements.get(Trash).sure(), 500, 0);
+		}
 	}
 
-	function loadContent() {
-		shop.x = Data.placements.get(Shop).sure().x;
-		shop.y = Data.placements.get(Shop).sure().y;
-		shelf.x = Data.placements.get(Shelf).sure().x;
-		shelf.y = Data.placements.get(Shelf).sure().y;
+	function transitionActivate(visual:Visual, placement:Data.Placements, fromOffsetX:Float, fromOffsetY:Float) {
+		visual.active = true;
+		visual.x = placement.x + fromOffsetX;
+		visual.y = placement.y + fromOffsetY;
+		visual.transition(Easing.QUAD_EASE_OUT, 0.3, props -> {
+			props.x = placement.x;
+			props.y = placement.y;
+		});
 	}
 
-	function update(delta:Float) {}
+	function transitionDisable(visual:Visual, placement:Data.Placements, fromOffsetX:Float, fromOffsetY:Float) {
+		visual.x = placement.x + fromOffsetX;
+		visual.y = placement.y + fromOffsetY;
+		visual.transition(Easing.QUAD_EASE_OUT, 0.3, props -> {
+			props.x = placement.x;
+			props.y = placement.y;
+		}).onceComplete(this, () -> {
+			visual.active = false;
+		});
+	}
 }

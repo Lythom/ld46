@@ -1,5 +1,6 @@
 package ld46.components;
 
+import ceramic.Easing;
 import ceramic.Point;
 import ceramic.Assets;
 import ld46.model.SorcererItem;

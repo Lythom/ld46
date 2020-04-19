@@ -714,9 +714,29 @@
 					"y": 416
 				},
 				{
+					"id": "MainBoardShop",
+					"x": 442,
+					"y": 295
+				},
+				{
+					"id": "MainBoardBattle",
+					"x": 442,
+					"y": 495
+				},
+				{
+					"id": "OpponentBoard",
+					"x": 438,
+					"y": 132
+				},
+				{
 					"id": "ShelfPadding",
 					"x": 14,
 					"y": 0
+				},
+				{
+					"id": "Trash",
+					"x": 84,
+					"y": 375
 				}
 			],
 			"separators": [],
