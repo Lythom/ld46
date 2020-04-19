@@ -14,50 +14,49 @@
 				},
 				{
 					"typeStr": "1",
-					"name": "description"
+					"name": "internal_description"
 				},
 				{
 					"typeStr": "1",
-					"name": "setBonusDescription",
-					"display": null
+					"name": "bonusDescription"
 				}
 			],
 			"lines": [
 				{
 					"id": "Arcanist",
 					"image": "",
-					"description": "Magical Power (scaling)",
-					"setBonusDescription": "Power + 50% for all allies"
+					"internal_description": "Magical Power (scaling)",
+					"bonusDescription": "Power + 50% for all allies"
 				},
 				{
 					"id": "Fall",
 					"image": "",
-					"description": "Debuff",
-					"setBonusDescription": "reduce opponent attack by 10% when damaged (max 50%)"
+					"internal_description": "Debuff",
+					"bonusDescription": "reduce opponent attack by 10% when damaged (max 50%)"
 				},
 				{
 					"id": "Physicalist",
 					"image": "",
-					"description": "Raw damage (flat values)",
-					"setBonusDescription": "Power and Attack + 15 for all allies"
+					"internal_description": "Raw damage (flat values)",
+					"bonusDescription": "Power and Attack + 15 for all allies"
 				},
 				{
 					"id": "Spring",
 					"image": "",
-					"description": "Buff",
-					"setBonusDescription": "Power and Attack + 15% for all allies"
+					"internal_description": "Buff",
+					"bonusDescription": "Power and Attack + 15% for all allies"
 				},
 				{
 					"id": "Summer",
 					"image": "",
-					"description": "Aggressive but fragile",
-					"setBonusDescription": "Additional raw damage (5% target maxHP)"
+					"internal_description": "Aggressive but fragile",
+					"bonusDescription": "Additional raw damage (5% target maxHP)"
 				},
 				{
 					"id": "Winter",
 					"image": "",
-					"description": "Resiliant but weak",
-					"setBonusDescription": "MaxHP + 50% for all allies"
+					"internal_description": "Resiliant but weak",
+					"bonusDescription": "MaxHP + 50% for all allies"
 				}
 			],
 			"separators": [],
@@ -660,7 +659,7 @@
 			"lines": [
 				{
 					"Id": "ShelfSize",
-					"value": 12
+					"value": 10
 				},
 				{
 					"Id": "ShopDrawCount",
@@ -716,7 +715,7 @@
 				},
 				{
 					"id": "ShelfPadding",
-					"x": 20,
+					"x": 14,
 					"y": 0
 				}
 			],

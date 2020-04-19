@@ -5,7 +5,6 @@ import haxe.ds.StringMap;
 import ceramic.Texture;
 import ceramic.Images;
 import ceramic.ImageAsset;
-import ogmo.Level;
 import ceramic.Assets;
 import ceramic.Texts;
 import ceramic.Asset;

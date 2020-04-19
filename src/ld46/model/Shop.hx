@@ -13,18 +13,26 @@ class Shop extends Model {
 	}
 
 	public function drawItems(game:SorcererTournament) {
+		returnItems(game);
 		game.drawFromDeck(Data.configs.get(ShopDrawCount).sure().value, this.draw);
-		this.dirty = true;
+		this.invalidateDraw();
 	}
 
 	public function returnItems(game:SorcererTournament) {
 		game.returnToDeck(draw);
-		this.dirty = true;
+		this.invalidateDraw();
 	}
 
-	public function buy(item:SorcererItem):Bool {
+	public function canBuy():Bool {
+		return credits > 0;
+	}
+
+	public function processPurchase(item:SorcererItem):Bool {
+		if (!canBuy())
+			return false;
+		credits --;
 		var result = draw.remove(item);
-		this.dirty = true;
+		this.invalidateDraw();
 		return result;
 	}
 }

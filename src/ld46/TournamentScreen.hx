@@ -56,14 +56,19 @@ class TournamentScreen extends Visual {
 		trash = new TrashActor(assets);
 		playersScores = new Text();
 		items = new StringMap<SorcererItemActor>();
-		shop = new ShopActor(assets, localPlayer.shop, getItemActor.sure());
-		shelf = new ShelfActor(assets, localPlayer.shelf, getItemActor.sure());
+		shop = new ShopActor(assets, localPlayer.shop, getItemActor);
+		shelf = new ShelfActor(assets, localPlayer.shelf, getItemActor);
 
+		nextRoundButton.onPointerDown(this, evt -> {
+			localPlayer.shop.drawItems(SorcererTournament.debugInstance);
+		});
 
 		shop.onPurchaseItem(this, item -> {
-			var bought = localPlayer.shop.buy(item);
-			if (bought) {
-				localPlayer.shelf.put(item);
+			if (!localPlayer.shop.canBuy())
+				return;
+			var hasRoom = localPlayer.shelf.put(item);
+			if (hasRoom) {
+				localPlayer.shop.processPurchase(item);
 			}
 		});
 

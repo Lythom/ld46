@@ -7,6 +7,7 @@ class SorcererTournament extends Model {
 	var deck:Array<SorcererItem>;
 	var players:Array<Player>;
 	var battles:Array<Battle>;
+	public static var debugInstance:SorcererTournament;
 
 	public function new() {
 		super();
@@ -17,6 +18,8 @@ class SorcererTournament extends Model {
 			players.push(new Player("player " + Utils.randomString(6)));
 		}
 		initDeck();
+		initPhaseShopEquip();
+		debugInstance = this;
 	}
 
 	public function update() {

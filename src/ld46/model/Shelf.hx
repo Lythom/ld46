@@ -4,7 +4,6 @@ import tracker.Model;
 
 @:nullSafety(Off)
 class Shelf extends Model {
-
 	/**
 	 * Do not manipulate directly, use put and remove instead
 	 */
@@ -16,16 +15,18 @@ class Shelf extends Model {
 	}
 
 	public function put(item:SorcererItem):Bool {
-		if (items.length >= Data.configs.get(ShelfSize).sure().value)
+		if (items.length >= Data.configs.get(ShelfSize).sure().value) 
 			return false;
+		trace("put item on shelf");
 		items.add(item);
-		this.dirty = true;
+		this.invalidateItems();
 		return true;
 	}
 
 	public function remove(item:SorcererItem):Bool {
 		var res = items.remove(item);
-		this.dirty = true;
+		if (res)
+			this.invalidateItems();
 		return res;
 	}
 }

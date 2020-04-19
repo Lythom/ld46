@@ -7,6 +7,7 @@ import ld46.model.Shop;
 import ceramic.Images;
 import ceramic.Assets;
 import ceramic.Quad;
+import ceramic.Shortcuts.*;
 
 @:nullSafety(Off)
 class ShopActor extends Quad {
@@ -26,9 +27,9 @@ class ShopActor extends Quad {
 		this.getItemActor = getItemActor;
 		this.creditsText = new Text();
 		this.items = shop.draw.map(item -> getItemActor(item));
+		this.texture = assets.texture(Images.PRELOAD__SHOP);
 
 		refreshItems(shop.draw, null);
-		this.texture = assets.texture(Images.PRELOAD__SHOP);
 
 		this.shop.onCreditsChange(this, (credits, _) -> {
 			this.creditsText.content = Std.string(credits);
@@ -40,17 +41,37 @@ class ShopActor extends Quad {
 		var padding = Data.placements.get(ShelfPadding).sure().x;
 		this.items = newDraw.map(item -> getItemActor(item));
 		for (i => actor in this.items) {
-			var x = padding + (actor.texture.width + padding) * i;
-			var y = this.texture.height / 2;
+			this.add(actor);
+			var x = padding + actor.width / 2 + (actor.width + padding) * i;
+			var y = this.height / 2;
 			if (actor.x != x || actor.y != y) {
-				actor.transition(Easing.QUAD_EASE_IN_OUT, 0.15, props -> {
+				actor.transition(Easing.QUAD_EASE_IN_OUT, 0.25, props -> {
 					props.x = x;
 					props.y = y;
 				});
 			}
-			actor.offPointerUp();
-			actor.onPointerUp(this, evt -> {
-				this.emitPurchaseItem(actor.item);
+			actor.offPointerDown();
+			actor.onPointerDown(this, evt -> {
+				screen.oncePointerUp(this, evt -> {
+					if (actor.hits(evt.x, evt.y))
+						this.emitPurchaseItem(actor.item);
+				});
+			});
+			actor.offPointerOver();
+			actor.onPointerOver(this, evt -> {
+				actor.transition(Easing.QUAD_EASE_OUT, 0.15, props -> {
+					props.scaleX = 1.1;
+					props.scaleY = 1.1;
+				});
+				actor.showDescription();
+			});
+			actor.offPointerOut();
+			actor.onPointerOut(this, evt -> {
+				actor.transition(Easing.QUAD_EASE_IN_OUT, 0.15, props -> {
+					props.scaleX = 1;
+					props.scaleY = 1;
+				});
+				actor.hideDescription();
 			});
 		}
 	}
