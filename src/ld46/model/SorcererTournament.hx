@@ -47,7 +47,7 @@ class SorcererTournament extends Model {
 		shuffleDeck();
 		for (player in players) {
 			player.shop.drawItems(this);
-			player.shop.credits = (player.isWinnerOfLastBattle() ? Data.configs.get(ShopWinnerPick).value : Data.configs.get(ShopLoserPick).value);
+			player.shop.credits += (player.isWinnerOfLastBattle() ? Data.configs.get(ShopWinnerPick).value : Data.configs.get(ShopLoserPick).value);
 		}
 		// TODO here: play AI turn
 		// non humain players should by stuff and change equipments
@@ -75,6 +75,7 @@ class SorcererTournament extends Model {
 	}
 
 	public function drawFromDeck(count:Int, draw:List<SorcererItem>) {
+		shuffleDeck();
 		for (i in 0...count) {
 			var item = deck.pop();
 			if (item != null)
@@ -87,5 +88,8 @@ class SorcererTournament extends Model {
 			deck.push(item);
 		}
 		draw.clear();
+	}
+	public function returnOneToDeck(item:SorcererItem) {
+		deck.push(item);
 	}
 }

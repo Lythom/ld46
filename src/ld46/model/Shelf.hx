@@ -17,7 +17,6 @@ class Shelf extends Model {
 	public function put(item:SorcererItem):Bool {
 		if (items.length >= Data.configs.get(ShelfSize).sure().value) 
 			return false;
-		trace("put item on shelf");
 		items.add(item);
 		this.invalidateItems();
 		return true;

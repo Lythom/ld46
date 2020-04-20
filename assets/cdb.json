@@ -115,7 +115,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/arcanist_hat.png"
 				},
 				{
 					"slot": 1,
@@ -130,7 +130,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/arcanist_chest.png"
 				},
 				{
 					"slot": 2,
@@ -145,7 +145,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/arcanist_hand.png"
 				},
 				{
 					"slot": 0,
@@ -161,7 +161,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/fall_top.png"
 				},
 				{
 					"slot": 1,
@@ -176,7 +176,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/fall_chest.png"
 				},
 				{
 					"slot": 2,
@@ -191,7 +191,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/fall_hand.png"
 				},
 				{
 					"slot": 0,
@@ -207,7 +207,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/physicalist_hat.png"
 				},
 				{
 					"slot": 1,
@@ -222,7 +222,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/physicalist_chest.png"
 				},
 				{
 					"slot": 2,
@@ -237,7 +237,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/physicalist_hand.png"
 				},
 				{
 					"slot": 0,
@@ -253,7 +253,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/spring_top.png"
 				},
 				{
 					"slot": 1,
@@ -268,7 +268,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/spring_chest.png"
 				},
 				{
 					"slot": 2,
@@ -283,7 +283,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/spring_hand.png"
 				},
 				{
 					"slot": 0,
@@ -305,7 +305,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/summer_top.png"
 				},
 				{
 					"slot": 1,
@@ -320,7 +320,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/summer_chest.png"
 				},
 				{
 					"slot": 2,
@@ -335,7 +335,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/summer_weapon.png"
 				},
 				{
 					"slot": 0,
@@ -351,7 +351,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/winter_top.png"
 				},
 				{
 					"slot": 1,
@@ -366,7 +366,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/winter_chest.png"
 				},
 				{
 					"slot": 2,
@@ -381,7 +381,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/winter_hand.png"
 				},
 				{
 					"enabled": false,
@@ -403,7 +403,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/chest.png"
 				},
 				{
 					"enabled": false,
@@ -417,7 +417,7 @@
 							"target": 0
 						}
 					],
-					"image": "preload/hat.png"
+					"image": "preload/hand.png"
 				},
 				{
 					"slot": 0,
@@ -675,7 +675,11 @@
 				},
 				{
 					"Id": "ItemsQuantitiesInDeck",
-					"value": 12
+					"value": 100
+				},
+				{
+					"Id": "SorcererDropDistanceSnap",
+					"value": 80
 				},
 				{
 					"Id": "ChaleaceHealth",

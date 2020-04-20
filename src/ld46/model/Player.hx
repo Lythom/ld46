@@ -49,20 +49,34 @@ class Player extends Model {
 
 		var counts = new StringMap<Int>();
 		shelf.onItemsChange(this, (current, _) -> {
+			// try merge
 			counts.clear();
 			for (item in current) {
-				var id = item.itemData.id.toString();
-				counts.set(id, counts.exists(id) ? counts.get(id) + 1 : 1);
+				var idlvl = item.itemData.id.toString() + item.level;
+				counts.set(idlvl, counts.exists(idlvl) ? counts.get(idlvl) + 1 : 1);
 			}
-			for (id => count in counts) {
+			function doMerge(merged:SorcererItem, outs:Array<SorcererItem>) {
+				merged.level++;
+				for (out in outs) {
+					out.triggerMergeInto(merged);
+					ceramic.Timer.delay(this, 0.25, () -> shelf.remove(out));
+				}
+			}
+			for (idlvl => count in counts) {
 				if (count >= 3) {
-					var mergeables = current.filter(item -> item.itemData.id.toString() == id);
-					var merged = mergeables.pop();
-					merged.level++;
-					var outs = [mergeables.pop(), mergeables.pop()];
-					for (out in outs) {
-						shelf.remove(out);
-						out.triggerMergeInto(merged);
+					var mergeables = current.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
+					doMerge(mergeables.pop(), [mergeables.pop(), mergeables.pop()]);
+					// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
+				}
+			}
+			for (s in sorcerers) {
+				for (item in s.items) {
+					var idlvl = item.itemData.id.toString() + item.level;
+					if (counts.get(idlvl) == 2) {
+						// 2 on shelf, 1 on sorcerer, merge on sorcerer !
+						var mergeables = current.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
+						doMerge(item, [mergeables.pop(), mergeables.pop()]);
+						// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
 					}
 				}
 			}

@@ -26,7 +26,7 @@ class MainMenu extends Visual {
 			var tournament = new SorcererTournament();
 			var allPlayer = tournament.getPlayers();
 			var player = allPlayer[0];
-			new TournamentScreen(assets, player, allPlayer);
+			new TournamentScreen(assets, player, allPlayer, tournament);
 		});
 		this.add(text);
 		this.add(test);

@@ -1,14 +1,17 @@
 package ld46;
 
+import ceramic.Easing;
 import ld46.components.ShopActor;
 import ld46.components.TrashActor;
 import ld46.components.Board;
 import ld46.components.NextRoundButton;
 import ld46.components.ShelfActor;
 import ld46.model.Player;
+import ld46.model.SorcererTournament;
 import ceramic.Assets;
 import ceramic.Text;
 import ceramic.Visual;
+import ceramic.Shortcuts.*;
 
 @:nullSafety(Off)
 class TournamentScreen extends Visual {
@@ -28,7 +31,7 @@ class TournamentScreen extends Visual {
 	var trash:TrashActor;
 	var playersScores:Text;
 
-	public function new(assets:Assets, localPlayer:Player, allPlayers:Array<Player>) {
+	public function new(assets:Assets, localPlayer:Player, allPlayers:Array<Player>, tournament:SorcererTournament) {
 		super();
 		this.assets = assets;
 		this.localPlayer = localPlayer;
@@ -37,19 +40,32 @@ class TournamentScreen extends Visual {
 		this.itemActorDirector = new ItemActorDirector(assets);
 
 		nextRoundButton = new NextRoundButton(assets);
-		mainBoard = new Board(assets, localPlayer, this.itemActorDirector);
-		trash = new TrashActor(assets);
 		playersScores = new Text();
 
-		shop = new ShopActor(assets, localPlayer.shop, itemActorDirector.getItemActor);
-		shelf = new ShelfActor(assets, localPlayer.shelf, itemActorDirector.getItemActor);
+		shop = new ShopActor(assets, localPlayer.shop, itemActorDirector);
+		shelf = new ShelfActor(assets, localPlayer.shelf, itemActorDirector);
+		trash = new TrashActor(assets, shelf);
+		mainBoard = new Board(assets, localPlayer, this.itemActorDirector, shelf);
 
 		add(mainBoard);
+		mainBoard.depth = 10;
 		add(trash);
+		trash.depth = 99;
 		add(shop);
+		shop.depth = 101;
+		shop.anchor(0,0);
 		add(shelf);
+		shelf.depth = 102;
+		shelf.anchor(0,0);
 		add(playersScores);
+		playersScores.depth = 99;
 		add(nextRoundButton);
+		nextRoundButton.depth = 99;
+
+		trash.onThrowItem(this, item -> {
+			shelf.shelf.remove(item);
+			tournament.returnOneToDeck(item);
+		});
 
 		nextRoundButton.onPointerDown(this, evt -> {
 			localPlayer.shop.drawItems(SorcererTournament.debugInstance);
@@ -74,9 +90,15 @@ class TournamentScreen extends Visual {
 		localPlayer.onGameStateChange(this, (_, __) -> updatePlacements());
 
 		app.onKeyDown(this, e -> {
-			if (e.keyCode == KeyCode.ESCAPE) {
+			if (e.keyCode == ceramic.KeyCode.ESCAPE) {
 				this.destroy();
 				new MainMenu(assets);
+			}
+			if (e.keyCode == ceramic.KeyCode.KP_PLUS) {
+				localPlayer.shop.credits++;
+			}
+			if (e.keyCode == ceramic.KeyCode.KP_MULTIPLY) {
+				localPlayer.shop.drawItems(SorcererTournament.debugInstance);
 			}
 		});
 		HotLoader.instance.onReload(this, updatePlacements);

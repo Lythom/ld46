@@ -17,9 +17,28 @@ class SorcererItemActor extends Quad {
 		this.item = item;
 		this.assets = assets;
 		this.description = new Description(getDescription(item));
-		add(description);
+
 		HotLoader.instance.onReload(this, loadContent);
 		loadContent();
+
+		autorun(() -> {
+			description.text.content = getDescription(item);
+			switch (item.level) {
+				case 1:
+					description.text.color = ceramic.Color.WHITE;
+					description.color = ceramic.Color.BLACK;
+					this.color = ceramic.Color.WHITE;
+				case 2:
+					description.text.color = ceramic.Color.CYAN;
+					description.color = ceramic.Color.PURPLE;
+					this.color = ceramic.Color.CYAN;
+				case 3:
+					description.text.color = ceramic.Color.YELLOW;
+					description.color = ceramic.Color.ORANGE;
+					this.color = ceramic.Color.YELLOW;
+				default:
+			}
+		});
 	}
 
 	public function loadContent() {
@@ -33,10 +52,14 @@ class SorcererItemActor extends Quad {
 	public function showDescription() {
 		var leftLimit = new Point();
 		/// where is the left point on (or out) screen ?
-		this.visualToScreen(this.width * 0.8 - description.width, 0, leftLimit);
-		var offset = leftLimit.x < 20 ? -leftLimit.x + 20 : 0;
-		description.pos(this.width * 0.8 + offset, 0);
-		description.alpha = 0.8;
+		this.visualToScreen(this.width * 0.8 - description.width, -description.width, leftLimit);
+		var offsetX = leftLimit.x < 20 ? -leftLimit.x + 20 : 0;
+		var offsetY = leftLimit.y < 20 ? -leftLimit.y + 20 : 0;
+		var p = new Point();
+		this.visualToScreen(this.width * 0.8 + offsetX, offsetY, p);
+		description.pos(p.x, p.y);
+		description.alpha = 0.7;
+		description.depth = 1000;
 		description.active = true;
 	}
 
@@ -48,8 +71,8 @@ class SorcererItemActor extends Quad {
 
 	static function getDescription(item:SorcererItem) {
 		return ''
-			+ 'Slot: ${Data.Items_slot.NAMES[item.itemData.slot.toInt()]}\n'
-			+ (item.itemData.set != null ? 'Set "${item.itemData.set.sure().id}"\nSet bonus :${item.itemData.set.sure().bonusDescription}\n' : '')
+			+ '${Data.Items_slot.NAMES[item.itemData.slot.toInt()]} Level ${item.level}\n'
+			// + (item.itemData.set != null ? 'Set "${item.itemData.set.sure().id}"\nSet bonus :${item.itemData.set.sure().bonusDescription}\n' : '')
 			+ (item.itemData.provideRole != null ? 'Provide "${item.itemData.provideRole.sure().id}"\n' : '')
 			+ (item.itemData.provideBonus != null ? 'Gives:\n  * ${item.itemData.provideBonus.map(getBonusDescription).join(',\n  * ')}\n' : '')
 			+ 'Id:${item.id}';

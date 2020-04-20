@@ -14,7 +14,6 @@ Le joueur lance le jeu
 			- [server] draw items out of deck to shops (5 by player)
 			- [server] credit shop based on last fight (loss=2, win=3, initial=3)
 			- [server] play AI turn (shop, equip)
-
 		- les personnages sont déjà équipés d'items de départ au début de partie
 		- un shop avec 5 items tirés au hasard dans le deck sont présentés, 3 peuvent être sélectionnés (crédit round 3). les items dans le shop ne sont plus dans le deck.
 		- Click sur un items emmène directement l'item sur le shelf.
@@ -30,6 +29,7 @@ Le joueur lance le jeu
 		- Drag and drop item sur Trash détruit l'item définitivement
 		- Drag and drop item sur Personnage remplace avec l'item équipe sur le slot équivalent. Vise le personnage le plus proche dans la dropZone (< 200 px du personnage).
 		- Drag and drop personnage sur le terrain change sa position initiale. Dans les limites du terrain.
+		
 		- Click sur bouton "Next Round" déclenche la phase Combat
 			- hide shop
 			- hide next round button

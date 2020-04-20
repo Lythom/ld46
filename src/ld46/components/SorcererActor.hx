@@ -1,6 +1,7 @@
 package ld46.components;
 
-import ld46.TournamentScreen.ItemActorFactory;
+import ceramic.Easing;
+import ld46.ItemActorDirector;
 import ceramic.Point;
 import ceramic.Text;
 import ceramic.Images;
@@ -14,12 +15,14 @@ class SorcererActor extends Quad {
 	public var items:Array<SorcererItemActor>;
 
 	private var assets:Assets;
+	private var itemActorDirector:ItemActorDirector;
 	private var hb:Text;
 
-	public function new(assets:Assets, sorcerer:Sorcerer, ItemActorFactory:ItemActorFactory) {
+	public function new(assets:Assets, sorcerer:Sorcerer, itemActorDirector:ItemActorDirector, shelf:ShelfActor) {
 		super();
 		this.sorcerer = sorcerer;
 		this.assets = assets;
+		this.itemActorDirector = itemActorDirector;
 		this.items = new Array<SorcererItemActor>();
 		this.hb = new Text();
 
@@ -32,8 +35,21 @@ class SorcererActor extends Quad {
 		this.hb.pos(0, -this.height / 2 - 20);
 		this.add(hb);
 
+		sorcerer.onItemsChange(this, (_,__) -> {
+			refreshItems();
+		});
+		refreshItems();
+
+		autorun(() -> {
+			hb.content = Std.string(sorcerer.health) + ' / ' + sorcerer.calculatedStats.get(Data.StatsKind.Health.toString());
+		});
+	}
+
+	public function refreshItems() {
+		trace('refreshItems');
+		items = [];
 		for (item in sorcerer.items) {
-			var itemActor = ItemActorFactory.getItemActor(item);
+			var itemActor = itemActorDirector.getItemActor(item);
 			items.push(itemActor);
 			this.add(itemActor);
 			switch (itemActor.item.itemData.slot) {
@@ -44,10 +60,31 @@ class SorcererActor extends Quad {
 				case Hand:
 					itemActor.pos(0 - itemActor.width * 0.3, this.height * 0.3);
 			}
+			wireItem(itemActor);
 		}
+	}
 
-		autorun(() -> {
-			hb.content = Std.string(sorcerer.health) + ' / ' + sorcerer.calculatedStats.get(Data.StatsKind.Health.toString());
+	public function wireItem(itemActor:SorcererItemActor) {
+		itemActor.offPointerDown();
+		itemActor.offPointerOver();
+		itemActor.onPointerOver(this, evy -> {
+			itemActor.transition(Easing.QUAD_EASE_OUT, 0.15, props -> {
+				props.scaleX = 1.1;
+				props.scaleY = 1.1;
+			});
+			itemActor.showDescription();
 		});
+		itemActor.offPointerOut();
+		itemActor.onPointerOut(this, evt -> {
+			itemActor.transition(Easing.QUAD_EASE_IN_OUT, 0.15, props -> {
+				props.scaleX = 1;
+				props.scaleY = 1;
+			});
+			itemActor.hideDescription();
+		});
+	}
+
+	public function getItemOnSlot(slot:Data.Items_slot):Null<SorcererItemActor> {
+		return this.items.find(i -> i.item.itemData.slot == slot);
 	}
 }
