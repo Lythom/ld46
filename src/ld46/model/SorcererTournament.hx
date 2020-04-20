@@ -32,7 +32,6 @@ class SorcererTournament extends Model {
 	}
 
 	public function update(delta:Float) {
-		trace(players.map(p -> p.gameState).join(','));
 		if (players.foreach(p -> p.gameState == ShopEquipReady || p.gameState == OutOfTournament)) {
 			var livingPlayers = players.filter(p -> p.chaleace.health > 0);
 			initBattlePhase(livingPlayers);
@@ -47,6 +46,10 @@ class SorcererTournament extends Model {
 			}
 		}
 		if (players.count(p -> p.gameState == OutOfTournament) >= players.length - 1) {
+			var winner = players.find(p -> p.gameState != OutOfTournament);
+			if (winner != null) {
+				winner.gameState = Winner;
+			}
 			app.offUpdate(update);
 		}
 		for (battle in activeBattles) {
@@ -65,12 +68,18 @@ class SorcererTournament extends Model {
 		}
 
 		var activeBattlesOrderList = [for (i in 0...livingPlayers.length) i].shuffle();
-		trace(activeBattlesOrderList.join(','));
-		for (i in 0...Math.floor(livingPlayers.length / 2)) {
-			var battle:Battle;
-			if (i < activeBattlesOrderList.length - 1) {
-				battle = new Battle(livingPlayers[activeBattlesOrderList[i]], livingPlayers[activeBattlesOrderList[i + 1]]);
-				trace('creating battle ${battle.idBattle} with ${battle.playerA.playerName} (${activeBattlesOrderList[i]}) and ${battle.playerA.playerName} (${activeBattlesOrderList[i + 1]})');
+		while (activeBattlesOrderList.length > 0) {
+			var idxA = activeBattlesOrderList.pop();
+			var idxB = activeBattlesOrderList.pop();
+			var battle;
+			if (idxB != null) {
+				// TODO: HACK, the local player (first in array) is always playerA to simplify rendering
+				var playerA = idxB == 0 ? livingPlayers[idxB] : livingPlayers[idxA];
+				var playerB = idxB == 0 ? livingPlayers[idxA] : livingPlayers[idxB];
+				if (idxB == 0)
+					trace('player should have been B side -> swapped to A');
+				battle = new Battle(playerA, playerB);
+				trace('creating battle ${battle.idBattle} with ${battle.playerA.playerName} (${idxA}) and ${battle.playerB.playerName} (${idxB})');
 				activeBattles.push(battle);
 				battle.onceWinnerChange(this, (winner, _) -> {
 					if (winner == null)
@@ -80,7 +89,7 @@ class SorcererTournament extends Model {
 				});
 			} else {
 				// there is not enough opponent, luck player gets a free win
-				battle = new Battle(livingPlayers[activeBattlesOrderList[i]], null);
+				battle = new Battle(livingPlayers[idxA], null);
 				finishedBattles.push(battle);
 			}
 			battle.playerA.battles.push(battle);
@@ -94,6 +103,7 @@ class SorcererTournament extends Model {
 		for (player in players) {
 			player.shop.drawItems(this);
 			player.shop.credits += (player.isWinnerOfLastBattle() ? Data.configs.get(ShopWinnerPick).value : Data.configs.get(ShopLoserPick).value);
+			player.resetEntities();
 		}
 		// TODO here: play AI turn
 		// non humain players should by stuff and change equipments

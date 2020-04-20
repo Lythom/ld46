@@ -1,5 +1,8 @@
 package ld46;
 
+import ceramic.Fonts;
+import ceramic.KeyCode;
+import ld46.components.BarActor;
 import ld46.model.SorcererTournament;
 import ceramic.Images;
 import ceramic.Assets;
@@ -31,10 +34,18 @@ class MainMenu extends Visual {
 		this.add(text);
 		this.add(test);
 
+
+		app.onKeyDown(this, key -> {
+			if (key.keyCode == KeyCode.KP_PLUS) {
+				trace(assets.font(Fonts.SIMPLY_MONO_60));
+				new ld46.fx.AnnounceFX('FIGHT', assets.font(Fonts.SIMPLY_MONO_60));
+			}
+		});
+
 		HotLoader.instance.onReload(this, loadContent);
-        loadContent();
-        
-        // var tournament = new SorcererTournament();
+		loadContent();
+
+		// var tournament = new SorcererTournament();
 	}
 
 	function loadContent() {

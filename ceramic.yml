@@ -8,6 +8,7 @@ app:
     libs: 
         - 'nape'
         - 'castle'
+        - 'tweenxcore'
     hxml: |
         -D ceramic_nape_physics
         -D ceramic_use_electron 

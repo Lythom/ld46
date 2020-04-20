@@ -11,6 +11,7 @@ enum GameState {
 	Battle;
 	BattleEnded;
 	OutOfTournament;
+	Winner;
 }
 
 @:nullSafety(Off)
@@ -24,6 +25,8 @@ class Player extends Model {
 	@observe public var shelf:Shelf;
 
 	public var boardEntities(get, null):Array<BoardEntity>;
+
+	@event function notifyBattleResult(isWinner:Bool);
 
 	public function new(playerName:String) {
 		super();
@@ -72,6 +75,7 @@ class Player extends Model {
 				if (count >= 3) {
 					var mergeables = current.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
 					doMerge(mergeables.pop(), [mergeables.pop(), mergeables.pop()]);
+					return;
 					// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
 				}
 			}
@@ -82,6 +86,7 @@ class Player extends Model {
 						// 2 on shelf, 1 on sorcerer, merge on sorcerer !
 						var mergeables = current.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
 						doMerge(item, [mergeables.pop(), mergeables.pop()]);
+						return;
 						// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
 					}
 				}
@@ -94,12 +99,7 @@ class Player extends Model {
 				chaleace.fighting = gameState != ShopEquip;
 			}
 			if (gameState == ShopEquip) {
-				for (sorc in sorcerers) {
-					sorc.x = sorc.boardConfiguredX;
-					sorc.y = sorc.boardConfiguredY;
-				}
-				chaleace.x = chaleace.boardConfiguredX;
-				chaleace.y = chaleace.boardConfiguredY;
+				placeOnConfiguredPositions();
 			}
 		});
 	}
@@ -110,16 +110,25 @@ class Player extends Model {
 		return arr;
 	}
 
-	public function initBattle() {
+	public function placeOnConfiguredPositions() {
+		for (sorc in sorcerers) {
+			sorc.x = sorc.boardConfiguredX;
+			sorc.y = sorc.boardConfiguredY;
+		}
+		chaleace.x = chaleace.boardConfiguredX;
+		chaleace.y = chaleace.boardConfiguredY;
+	}
+
+	public function resetEntities() {
 		this.chaleace.lockIn = Data.configs.get(ChaleaceLockTimeInSec).sure().value;
 		for (sorcerer in this.sorcerers) {
 			sorcerer.health = sorcerer.calculatedStats.getValue(Health);
 			sorcerer.attackCooldown = 0;
 		}
+		placeOnConfiguredPositions();
 	}
 
 	public function moveToPlayerB() {
-		trace('set B pos pos ' + playerName);
 		for (sorc in sorcerers) {
 			sorc.moveToPlayerB();
 		}

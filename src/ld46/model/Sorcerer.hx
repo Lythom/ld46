@@ -70,7 +70,7 @@ class Sorcerer extends BoardEntity {
 	}
 
 	public function moveAttack(delta:Float) {
-		if (target != null) {
+		if (target != null && this.health > 0) {
 			var dist = this.distanceWith(target);
 			if (dist > calculatedStats.getValue(AttackRange)) {
 				// in pxPerSeconds
@@ -86,7 +86,7 @@ class Sorcerer extends BoardEntity {
 				if (attackCooldown <= 0) {
 					var attack = this.calculatedStats.getValue(AttackDamage);
 					this.emitAttackTarget(this, target, attack);
-					this.attackCooldown = 1 / this.calculatedStats.getValue(AttackSpeed, 0.001);
+					this.attackCooldown += 1 / this.calculatedStats.getValue(AttackSpeed, 0.001);
 				}
 			}
 			attackCooldown -= delta;
@@ -95,6 +95,8 @@ class Sorcerer extends BoardEntity {
 
 	public function targetClosest(boardEntities:Array<BoardEntity>) {
 		target = null;
+		if (this.health == 0)
+			return;
 
 		var role:Data.RolesKind = Duelist;
 		if (top.itemData.provideRole != null) {

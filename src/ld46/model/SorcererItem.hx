@@ -16,9 +16,9 @@ class SorcererItem extends Item implements Events implements Observable {
 			];
 		}, args -> {
 			var level = cast(args.item, SorcererItem).level;
-			var percentValue = args.values.get(statName).or(0) * definition.percentValue * level;
+			var percentValue = definition.percentValue * level;
 			var flatValue = definition.flatValue * level;
-			return '${statName}: ${flatValue == 0 ? '' : Std.string(flatValue)}${percentValue == 0 ? '' : Std.string(percentValue * 100) + '%'}';
+			return '${statName}: ${flatValue == 0 ? '' : Std.string(Std.int(flatValue))}${percentValue == 0 ? '' : '+' + Std.string(Std.int(percentValue * 100)) + ' %'}';
 		});
 	}
 

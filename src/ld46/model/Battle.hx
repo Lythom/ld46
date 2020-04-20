@@ -23,11 +23,10 @@ class Battle extends Model {
 			throw 'playerA required';
 
 		if (playerB != null) {
-			playerB.moveToPlayerB();
-
 			// init player board
-			this.playerA.initBattle();
-			playerB.initBattle();
+			playerA.resetEntities();
+			playerB.resetEntities();
+			playerB.moveToPlayerB();
 
 			for (s in this.playerA.sorcerers)
 				s.onAttackTarget(this, handleAttack);
@@ -42,8 +41,9 @@ class Battle extends Model {
 
 	public function handleAttack(from:BoardEntity, target:BoardEntity, attack:Float):Void {
 		var attack = from.calculatedStats.getValue(AttackDamage);
+		var power = from.calculatedStats.getValue(Power);
 		var targetDef = target.calculatedStats.getValue(Defense);
-		var damage = attack - attack * targetDef / (100 + targetDef);
+		var damage = attack - attack * targetDef / (100 + targetDef) + power;
 		target.takeDamage(from, damage);
 	}
 

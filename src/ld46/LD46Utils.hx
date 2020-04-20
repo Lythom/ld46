@@ -59,4 +59,21 @@ class LD46Utils {
 		var b = y2 - y1;
 		return Math.atan2(b, a);
 	}
+
+	
+	public static function getAttributeDescription(attrValues:AttributeValues):String {
+		return Data.stats.all.map(stat -> getAttributeValueDescription(attrValues, stat.id)).filter(str -> str != null).join('\n');
+	}
+
+	public static function getAttributeValueDescription(attrValues:AttributeValues, stat:Data.StatsKind):Null<String> {
+		var value = attrValues.getValue(stat);
+		if (value == 0)
+			return null;
+		switch (stat) {
+			case AttackSpeed:
+				return 'Attack Speed: +' + Std.int(value) + ' Atk/sec';
+			default:
+				return stat.toString() + ': +' + Std.int(value);
+		}
+	}
 }

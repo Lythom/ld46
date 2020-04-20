@@ -110,7 +110,7 @@
 					"provideBonus": [
 						{
 							"stat": "Power",
-							"flatValue": 25,
+							"flatValue": 10,
 							"percentValue": 0,
 							"target": 0
 						}
@@ -125,7 +125,7 @@
 					"provideBonus": [
 						{
 							"stat": "Power",
-							"flatValue": 50,
+							"flatValue": 20,
 							"percentValue": 0,
 							"target": 0
 						}
@@ -140,7 +140,7 @@
 					"provideBonus": [
 						{
 							"stat": "Power",
-							"flatValue": 50,
+							"flatValue": 20,
 							"percentValue": 0,
 							"target": 0
 						}
@@ -263,7 +263,7 @@
 					"provideBonus": [
 						{
 							"stat": "Power",
-							"flatValue": 50,
+							"flatValue": 20,
 							"percentValue": 0,
 							"target": 0
 						}
@@ -278,7 +278,7 @@
 					"provideBonus": [
 						{
 							"stat": "Power",
-							"flatValue": 50,
+							"flatValue": 20,
 							"percentValue": 0,
 							"target": 0
 						}
@@ -628,7 +628,7 @@
 			"lines": [
 				{
 					"id": "Health",
-					"value": 100
+					"value": 200
 				},
 				{
 					"id": "Defense",
@@ -644,11 +644,11 @@
 				},
 				{
 					"id": "AttackSpeed",
-					"value": 1
+					"value": 0.7
 				},
 				{
 					"id": "AttackRange",
-					"value": 70
+					"value": 150
 				}
 			],
 			"separators": [],
@@ -693,11 +693,11 @@
 				},
 				{
 					"Id": "ChaleaceHealth",
-					"value": 100
+					"value": 1000
 				},
 				{
 					"Id": "DescWidth",
-					"value": 280
+					"value": 279
 				},
 				{
 					"Id": "DescHeight",
@@ -710,6 +710,10 @@
 				{
 					"Id": "MoveSpeed",
 					"value": 50
+				},
+				{
+					"Id": "MissilesHeight",
+					"value": -90
 				}
 			],
 			"separators": [],
@@ -767,6 +771,11 @@
 					"id": "Trash",
 					"x": 84,
 					"y": 375
+				},
+				{
+					"id": "NextRoundButton",
+					"x": 110,
+					"y": 60
 				}
 			],
 			"separators": [],

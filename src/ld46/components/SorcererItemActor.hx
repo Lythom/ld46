@@ -1,9 +1,6 @@
 package ld46.components;
 
-import lythom.stuffme.BonusDetail;
 import lythom.stuffme.AttributeValues;
-import lythom.stuffme.Bonus;
-import ceramic.Easing;
 import ceramic.Point;
 import ceramic.Assets;
 import ld46.model.SorcererItem;
@@ -34,11 +31,11 @@ class SorcererItemActor extends Quad {
 				case 2:
 					description.text.color = ceramic.Color.CYAN;
 					description.color = ceramic.Color.PURPLE;
-					this.color = ceramic.Color.CYAN;
+					this.color = ceramic.Color.fromHSLuv(207, 1, 94);
 				case 3:
 					description.text.color = ceramic.Color.YELLOW;
 					description.color = ceramic.Color.ORANGE;
-					this.color = ceramic.Color.YELLOW;
+					this.color = ceramic.Color.fromHSLuv(76, 1, 94);
 				default:
 			}
 		});
@@ -62,7 +59,7 @@ class SorcererItemActor extends Quad {
 		this.visualToScreen(this.width * 0.8 + offsetX + contextOffsetX, offsetY, p);
 		description.pos(p.x, p.y);
 		description.alpha = 0.7;
-		description.depth = 1000;
+		description.depth = 9999;
 		description.active = true;
 	}
 
@@ -72,9 +69,9 @@ class SorcererItemActor extends Quad {
 
 	public function update() {}
 
-	static function getDescription(item:SorcererItem) {
+	public static function getDescription(item:SorcererItem) {
 		
-		var itemEffects = (new AttributeValues()).with([item]);
+		var itemEffects:CalculatedStuff = (new AttributeValues()).with([item]);
 		
 		return ''
 			+ '${(item.itemData.set != null ? '"${item.itemData.set.sure().id}" ' : ' ') + Data.Items_slot.NAMES[item.itemData.slot.toInt()]} Level ${item.level}\n'

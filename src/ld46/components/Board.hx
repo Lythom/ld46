@@ -24,7 +24,6 @@ class Board extends Quad {
 		for (sorcerer in player.sorcerers) {
 			var actor = new SorcererActor(assets, sorcerer, iaf);
 			sorcerers.push(actor);
-			add(actor);
 			if (isLocalPlayer) {
 				actor.onPointerDown(this, evt -> {
 					if (!actor.sorcerer.fighting) {
@@ -47,7 +46,6 @@ class Board extends Quad {
 				});
 			}
 		}
-		add(chaleace);
 		if (isLocalPlayer) {
 			chaleace.onPointerDown(this, evt -> {
 				if (!chaleace.chaleace.fighting) {
@@ -70,13 +68,31 @@ class Board extends Quad {
 			});
 		}
 
-		autorun(() -> {
-			for (sorcererA in sorcerers) {
-				sorcererA.pos(sorcererA.sorcerer.x + this.width * 0.5, sorcererA.sorcerer.y + this.height * 0.5);
-				sorcererA.depth = sorcererA.y;
+		var p = new Point();
+		app.onUpdate(this, delta -> {
+			if (this.active) {
+				// var boardTargetLocation = Data.placements.get(OpponentBoard).sure();
+				// if (isLocalPlayer) {
+				// 	if (this.chaleace.chaleace.fighting) {
+				// 		boardTargetLocation = Data.placements.get(MainBoardBattle).sure();
+				// 	} else {
+				// 		boardTargetLocation = Data.placements.get(MainBoardShop).sure();
+				// 	}
+				// }
+				// var localOffsetX = boardTargetLocation.x - this.x; // (isLocalPlayer ? 0 : -398);
+				// var localOffsetY = boardTargetLocation.y - this.y; // (isLocalPlayer ? 0 : 168);
+				var p = new Point();
+				var localOffsetX = (isLocalPlayer ? 0 : -398);
+				var localOffsetY = (isLocalPlayer ? 0 : 168);
+				for (sorcererA in sorcerers) {
+					this.visualToScreen(sorcererA.sorcerer.x + this.width * 0.5, sorcererA.sorcerer.y + this.height * 0.5, p);
+					sorcererA.pos(p.x + localOffsetX, p.y + localOffsetY);
+					sorcererA.depth = 1000 + p.y;
+				}
+				this.visualToScreen(chaleace.chaleace.x + this.width * 0.5, chaleace.chaleace.y + this.height * 0.5, p);
+				chaleace.pos(p.x + localOffsetX, p.y + localOffsetY);
+				chaleace.depth = 1000 + p.y;
 			}
-			chaleace.pos(chaleace.chaleace.x + this.width * 0.5, chaleace.chaleace.y + this.height * 0.5);
-			chaleace.depth = chaleace.y;
 		});
 
 		if (shelf != null) {
@@ -106,6 +122,22 @@ class Board extends Quad {
 				}
 			});
 		}
+	}
+
+	override function destroy() {
+		for (actor in this.sorcerers) {
+			actor.destroy();
+		}
+		chaleace.destroy();
+		super.destroy();
+	}
+
+	public function setActive(active:Bool) {
+		this.active = active;
+		for (sorcererA in sorcerers) {
+			sorcererA.active = active;
+		}
+		chaleace.active = active;
 	}
 
 	function getClosest(screenX:Float, screenY:Float):Null<SorcererActor> {

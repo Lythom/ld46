@@ -1,5 +1,6 @@
 package;
 
+import ceramic.Fonts;
 import ceramic.Text;
 import ceramic.Texts;
 import ceramic.Assets;
@@ -32,7 +33,8 @@ class Project extends Entity {
 	}
 
 	function ready() {
-		assets.watchDirectory(ceramic.macros.DefinesMacro.getDefine('assets_path'));
+		assets.addFont(Fonts.SIMPLY_MONO_60);
+		// assets.watchDirectory(ceramic.macros.DefinesMacro.getDefine('assets_path'));
 		assets.addAll(~/^preload\//);
 		assets.add(Texts.CDB);
 		assets.onceComplete(this, start);

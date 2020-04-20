@@ -1,5 +1,8 @@
 package ld46;
 
+import ceramic.Timer;
+import ceramic.Tween;
+import ceramic.Fonts;
 import ceramic.Quad;
 import ceramic.Images;
 import ceramic.Easing;
@@ -54,7 +57,7 @@ class TournamentScreen extends Visual {
 			if (p != localPlayer) {
 				var b = new Board(assets, p, itemActorDirector, null);
 				boards.set(p, b);
-				b.active = false;
+				b.setActive(false);
 			}
 		}
 		boards.set(localPlayer, mainBoard);
@@ -138,8 +141,10 @@ class TournamentScreen extends Visual {
 		var opponent = (battle == null ? null : (battle.playerA == localPlayer ? battle.playerB : battle.playerA));
 		var opponentBoard = opponent == null ? null : boards.get(opponent);
 		if (localPlayer.gameState == ShopEquip) {
-			if (opponentBoard != null)
+			if (opponentBoard != null) {
 				transitionDisable(opponentBoard, Data.placements.get(OpponentBoard).sure(), 1000, -500);
+				Timer.delay(this, 1, () -> opponentBoard.setActive(false));
+			}
 			mainBoard.transition(Easing.QUAD_EASE_OUT, 1, props -> {
 				props.x = Data.placements.get(MainBoardShop).sure().x;
 				props.y = Data.placements.get(MainBoardShop).sure().y;
@@ -147,7 +152,7 @@ class TournamentScreen extends Visual {
 			transitionActivate(shop, Data.placements.get(Shop).sure(), 1000, 0);
 			transitionActivate(shelf, Data.placements.get(Shelf).sure(), 0, 500);
 			transitionActivate(trash, Data.placements.get(Trash).sure(), -500, 0);
-			trace("ShopEquip");
+			transitionActivate(nextRoundButton, Data.placements.get(NextRoundButton).sure(), -500, 0);
 		} else if (localPlayer.gameState == ShopEquipReady) {
 			mainBoard.transition(Easing.QUAD_EASE_OUT, 1, props -> {
 				props.x = Data.placements.get(MainBoardBattle).sure().x;
@@ -156,19 +161,46 @@ class TournamentScreen extends Visual {
 			transitionDisable(shop, Data.placements.get(Shop).sure(), 1000, 0);
 			transitionDisable(shelf, Data.placements.get(Shelf).sure(), 0, 500);
 			transitionDisable(trash, Data.placements.get(Trash).sure(), -500, 0);
-			trace("ShopEquipReady");
+			nextRoundButton.active = false;
 		} else if (localPlayer.gameState == Battle) {
-			if (opponentBoard != null)
+			new ld46.fx.AnnounceFX('BATTLE START', assets.font(Fonts.SIMPLY_MONO_60));
+			if (opponentBoard != null) {
 				transitionActivate(opponentBoard, Data.placements.get(OpponentBoard).sure(), 1000, -500);
+				opponentBoard.setActive(true);
+			}
 			trace("Battle");
+		} else if (localPlayer.gameState == BattleEnded) {
+			if (localPlayer.isWinnerOfLastBattle()) {
+				new ld46.fx.AnnounceFX('YOU WON', assets.font(Fonts.SIMPLY_MONO_60));
+			} else {
+				new ld46.fx.AnnounceFX('Battle Lost', assets.font(Fonts.SIMPLY_MONO_60));
+			}
+		} else if (localPlayer.gameState == OutOfTournament) {
+			new ld46.fx.AnnounceFX('Chaleace destroyed', assets.font(Fonts.SIMPLY_MONO_60));
+			Timer.delay(this, 2, () -> {
+				new ld46.fx.AnnounceFX('Try again', assets.font(Fonts.SIMPLY_MONO_60), 72, 5);
+				Timer.delay(this, 5, () -> {
+					this.destroy();
+					new MainMenu(assets);
+				});
+			});
+		} else if (localPlayer.gameState == OutOfTournament) {
+			new ld46.fx.AnnounceFX('Chaleace destroyed', assets.font(Fonts.SIMPLY_MONO_60));
+			Timer.delay(this, 2, () -> {
+				new ld46.fx.AnnounceFX('Try again', assets.font(Fonts.SIMPLY_MONO_60), 72, 5);
+				Timer.delay(this, 5, () -> {
+					this.destroy();
+					new MainMenu(assets);
+				});
+			});
 		}
 	}
 
-	function transitionActivate(visual:Visual, placement:Data.Placements, fromOffsetX:Float, fromOffsetY:Float) {
+	function transitionActivate(visual:Visual, placement:Data.Placements, fromOffsetX:Float, fromOffsetY:Float):Null<Tween> {
 		visual.active = true;
 		visual.x = placement.x + fromOffsetX;
 		visual.y = placement.y + fromOffsetY;
-		visual.transition(Easing.QUAD_EASE_OUT, 1, props -> {
+		return visual.transition(Easing.QUAD_EASE_OUT, 1, props -> {
 			props.x = placement.x;
 			props.y = placement.y;
 			visual.active = true;
