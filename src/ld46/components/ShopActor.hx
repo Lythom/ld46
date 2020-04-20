@@ -62,19 +62,10 @@ class ShopActor extends Quad {
 			itemActorDirector.giveBack(cast deleteMe);
 		}
 		for (i => actor in this.items) {
-			var from = new Point();
-			actor.visualToScreen(0,0, from);
-			this.add(actor);
-			this.screenToVisual(from.x, from.y, from);
-			actor.pos(from.x + actor.width * actor.anchorX, from.y + actor.height * actor.anchorY);
 			var x = padding + actor.width / 2 + (actor.width + padding) * i;
 			var y = this.height / 2;
-			if (!actor.destroyed && (actor.x != x || actor.y != y)) {
-				actor.transition(Easing.QUAD_EASE_IN_OUT, 0.25, props -> {
-					props.x = x;
-					props.y = y;
-				});
-			}
+			add(actor);
+			actor.pos(x, y);
 			actor.offPointerDown();
 			actor.onPointerDown(this, evt -> {
 				screen.oncePointerUp(this, evt -> {
@@ -88,7 +79,7 @@ class ShopActor extends Quad {
 					props.scaleX = 1.1;
 					props.scaleY = 1.1;
 				});
-				actor.showDescription();
+				actor.showDescription(-80);
 			});
 			actor.offPointerOut();
 			actor.onPointerOut(this, evt -> {
@@ -99,6 +90,5 @@ class ShopActor extends Quad {
 				actor.hideDescription();
 			});
 		}
-		trace(this.children == null ? 'null' : '' + this.children.length);
 	}
 }

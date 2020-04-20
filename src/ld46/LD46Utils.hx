@@ -1,6 +1,9 @@
 package ld46;
 
-class Utils {
+import ld46.model.BoardEntity;
+import lythom.stuffme.AttributeValues;
+
+class LD46Utils {
 	// from https://github.com/jasononeil/hxrandom/blob/master/src/Random.hx
 
 	/** Return a random integer between 'from' and 'to', inclusive. */
@@ -13,7 +16,7 @@ class Utils {
 	public static function randomString(length:Int, charactersToUse = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"):String {
 		var str = "";
 		for (i in 0...length) {
-			str += charactersToUse.charAt(Utils.randomInt(0, charactersToUse.length - 1));
+			str += charactersToUse.charAt(LD46Utils.randomInt(0, charactersToUse.length - 1));
 		}
 		return str;
 	}
@@ -31,5 +34,29 @@ class Utils {
 			}
 		}
 		return arr;
+	}
+
+	public static function getValue(attributeValues:AttributeValues, stat:Data.StatsKind, defaultValue:Float = 0):Float {
+		return attributeValues.get(stat.sure().toString()).or(defaultValue);
+	}
+
+	public static function setValue(attributeValues:AttributeValues, stat:Data.StatsKind, value:Float) {
+		return attributeValues.set(stat.sure().toString(), value);
+	}
+
+	public static function distanceWith(entity:BoardEntity, target:BoardEntity):Float {
+		return distance(entity.x, entity.y, target.x, target.y);
+	}
+
+	public static function distance(x1:Float, y1:Float, x2:Float, y2:Float):Float {
+		var a = x2 - x1;
+		var b = y2 - y1;
+		return Math.sqrt(a * a + b * b);
+	}
+
+	public static function angleInRad(x1:Float, y1:Float, x2:Float, y2:Float):Float {
+		var a = x2 - x1;
+		var b = y2 - y1;
+		return Math.atan2(b, a);
 	}
 }

@@ -13,21 +13,31 @@ class Description extends Quad {
 		bg = new Quad();
 		bg.color = Color.BLACK;
 		bg.alpha = 0.8;
-		bg.size(320, 320);
+
 		bg.anchor(0, 0);
 		bg.pos(0, 0);
 
 		text = new Text();
 		text.anchor(0, 0);
 		text.pos(20, 20);
-		text.size(280, 280);
+
 		text.content = textStr;
-		text.fitWidth = 280;
+		text.fitWidth = bg.width - 40;
 
 		add(bg);
 		add(text);
 
-		this.size(320, 320);
 		this.anchor(1, 1);
+
+		HotLoader.instance.onReload(this, loadContent);
+		loadContent();
+	}
+
+	function loadContent() {
+		var width = Data.configs.get(DescWidth).sure().value;
+		var height = Data.configs.get(DescHeight).sure().value;
+		this.size(width, height);
+		bg.size(width, height);
+		text.size(width - 40, height - 40);
 	}
 }

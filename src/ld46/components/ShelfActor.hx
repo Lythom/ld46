@@ -63,7 +63,8 @@ class ShelfActor extends Quad {
 			var x = padding + actor.width / 2 + (actor.width + padding) * i;
 			var y = this.height / 2;
 			if (actor.x != x || actor.y != y) {
-				actor.transition(Easing.QUAD_EASE_OUT, 0.25, props -> {
+				actor.transition(Easing.QUAD_EASE_OUT, 0.45, props -> {
+					trace("to shelf");
 					props.x = x;
 					props.y = y;
 				});

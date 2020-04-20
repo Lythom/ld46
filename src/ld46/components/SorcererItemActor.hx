@@ -1,5 +1,8 @@
 package ld46.components;
 
+import lythom.stuffme.BonusDetail;
+import lythom.stuffme.AttributeValues;
+import lythom.stuffme.Bonus;
 import ceramic.Easing;
 import ceramic.Point;
 import ceramic.Assets;
@@ -49,14 +52,14 @@ class SorcererItemActor extends Quad {
 		description.active = false;
 	}
 
-	public function showDescription() {
+	public function showDescription(contextOffsetX:Float = 0) {
 		var leftLimit = new Point();
 		/// where is the left point on (or out) screen ?
-		this.visualToScreen(this.width * 0.8 - description.width, -description.width, leftLimit);
+		this.visualToScreen(this.width * 0.8 - description.width + contextOffsetX, -description.width, leftLimit);
 		var offsetX = leftLimit.x < 20 ? -leftLimit.x + 20 : 0;
 		var offsetY = leftLimit.y < 20 ? -leftLimit.y + 20 : 0;
 		var p = new Point();
-		this.visualToScreen(this.width * 0.8 + offsetX, offsetY, p);
+		this.visualToScreen(this.width * 0.8 + offsetX + contextOffsetX, offsetY, p);
 		description.pos(p.x, p.y);
 		description.alpha = 0.7;
 		description.depth = 1000;
@@ -70,16 +73,15 @@ class SorcererItemActor extends Quad {
 	public function update() {}
 
 	static function getDescription(item:SorcererItem) {
+		
+		var itemEffects = (new AttributeValues()).with([item]);
+		
 		return ''
-			+ '${Data.Items_slot.NAMES[item.itemData.slot.toInt()]} Level ${item.level}\n'
+			+ '${(item.itemData.set != null ? '"${item.itemData.set.sure().id}" ' : ' ') + Data.Items_slot.NAMES[item.itemData.slot.toInt()]} Level ${item.level}\n'
 			// + (item.itemData.set != null ? 'Set "${item.itemData.set.sure().id}"\nSet bonus :${item.itemData.set.sure().bonusDescription}\n' : '')
 			+ (item.itemData.provideRole != null ? 'Provide "${item.itemData.provideRole.sure().id}"\n' : '')
-			+ (item.itemData.provideBonus != null ? 'Gives:\n  * ${item.itemData.provideBonus.map(getBonusDescription).join(',\n  * ')}\n' : '')
-			+ 'Id:${item.id}';
-	}
-
-	static function getBonusDescription(bonus:Data.Items_provideBonus) {
-		return
-			'${bonus.statId}: ${bonus.flatValue == 0 ? '' : Std.string(bonus.flatValue)}${bonus.percentValue == 0 ? '' : Std.string(bonus.flatValue * 100)}%';
+			+ (item.itemData.provideBonus != null ? 'Gives:\n  * ${itemEffects.items[0].bonuses.map(bd -> bd.description).join(',\n  * ')}\n' : '')
+			//+ 'Id:${item.id}'
+			;
 	}
 }

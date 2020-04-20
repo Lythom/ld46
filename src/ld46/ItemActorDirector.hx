@@ -8,6 +8,7 @@ import ld46.model.SorcererItem;
 import ld46.components.SorcererItemActor;
 import haxe.ds.StringMap;
 import ceramic.Assets;
+import ceramic.Shortcuts.*;
 
 class ItemActorDirector extends Entity {
 	var items:StringMap<SorcererItemActor>;
@@ -41,24 +42,32 @@ class ItemActorDirector extends Entity {
 		if (item == null)
 			throw "item is required";
 		var itemActor = new SorcererItemActor(this.assets, item);
+		itemActor.pos(2000, 650);
 		// itemActor.color = Color.fromHSLuv(Math.random() * 360, 0.3 + Math.random() * 0.3, 0.5);
 		items.set(item.id, itemActor);
 
 		item.onceMergeInto(this, otherItem -> {
-			var otherActor = getItemActor(otherItem);
-			var from = new Point();
-			itemActor.visualToScreen(0, 0, from);
-			var to = new Point();
-			otherActor.visualToScreen(0, 0, to);
-			if (itemActor.parent != null)
-				itemActor.parent.remove(itemActor);
-			trace('from ' + from);
-			trace('to ' + to);
-			itemActor.pos(from.x, from.y);
-			itemActor.transition(Easing.QUAD_EASE_OUT, 0.25, props -> {
-				props.pos(to.x, to.y);
-			}).sure().onceComplete(this, () -> {
-				giveBack(itemActor);
+			// post update to not get overriden by shop to shelf transition
+			app.oncePostUpdate(this, delta -> {
+				var otherActor = getItemActor(otherItem);
+				var from = new Point();
+				itemActor.visualToScreen(0, 0, from);
+				var to = new Point();
+				otherActor.visualToScreen(itemActor.width * itemActor.anchorX, itemActor.height * itemActor.anchorY, to);
+				if (itemActor.parent != null)
+					itemActor.parent.remove(itemActor);
+				itemActor.pos(from.x + itemActor.width * itemActor.anchorX, from.y + itemActor.height * itemActor.anchorY);
+				itemActor.depth = 9999;
+				var tween = itemActor.transition(Easing.QUAD_EASE_OUT, 0.45, props -> {
+					props.pos(to.x, to.y);
+				});
+				if (tween == null) {
+					giveBack(itemActor);
+				} else {
+					tween.onceComplete(this, () -> {
+						giveBack(itemActor);
+					});
+				}
 			});
 		});
 

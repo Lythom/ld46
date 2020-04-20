@@ -8,12 +8,17 @@ import lythom.stuffme.Item;
 @:nullSafety(Off)
 class SorcererItem extends Item implements Events implements Observable {
 	public static function createBonus(definition:Data.Items_provideBonus):Bonus {
+		var statName = definition.stat.id.toString();
 		return new Bonus(args -> {
-			var statName = definition.stat.id.toString();
-			var level = cast(args.item,SorcererItem).level;
+			var level = cast(args.item, SorcererItem).level;
 			return [
 				statName => args.values.get(statName).or(0) * definition.percentValue * level + definition.flatValue * level
 			];
+		}, args -> {
+			var level = cast(args.item, SorcererItem).level;
+			var percentValue = args.values.get(statName).or(0) * definition.percentValue * level;
+			var flatValue = definition.flatValue * level;
+			return '${statName}: ${flatValue == 0 ? '' : Std.string(flatValue)}${percentValue == 0 ? '' : Std.string(percentValue * 100) + '%'}';
 		});
 	}
 
@@ -21,7 +26,7 @@ class SorcererItem extends Item implements Events implements Observable {
 	public var itemData:Data.Items;
 
 	@event function mergeInto(item:SorcererItem):Void;
-	
+
 	public function new(itemData:Data.Items) {
 		this.itemData = itemData;
 		var bonuses = itemData.provideBonus.map(SorcererItem.createBonus);

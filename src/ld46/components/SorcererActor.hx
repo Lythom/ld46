@@ -16,15 +16,17 @@ class SorcererActor extends Quad {
 
 	private var assets:Assets;
 	private var itemActorDirector:ItemActorDirector;
-	private var hb:Text;
+	private var healthText:Text;
+	private var healthBar:BarActor;
 
-	public function new(assets:Assets, sorcerer:Sorcerer, itemActorDirector:ItemActorDirector, shelf:ShelfActor) {
+	public function new(assets:Assets, sorcerer:Sorcerer, itemActorDirector:ItemActorDirector, opponent:Bool = false) {
 		super();
 		this.sorcerer = sorcerer;
 		this.assets = assets;
 		this.itemActorDirector = itemActorDirector;
 		this.items = new Array<SorcererItemActor>();
-		this.hb = new Text();
+		this.healthText = new Text();
+		this.healthBar = new BarActor(Data.colors.get(healthBG).sure().color, Data.colors.get(opponent ? opponentHealthFG : healthFG).sure().color);
 
 		this.texture = assets.texture(Images.PRELOAD__DUMMY);
 
@@ -32,16 +34,22 @@ class SorcererActor extends Quad {
 		this.size(50, 160);
 		this.scale(0.9 + Math.random() * 0.2, 0.9 + Math.random() * 0.2);
 
-		this.hb.pos(0, -this.height / 2 - 20);
-		this.add(hb);
+		healthText.pos(0, -50);
+		add(healthText);
 
-		sorcerer.onItemsChange(this, (_,__) -> {
+		healthBar.pos(0, -50);
+		healthBar.size(250, 50);
+		healthBar.depth = 2;
+		add(healthBar);
+
+		sorcerer.onItemsChange(this, (_, __) -> {
 			refreshItems();
 		});
 		refreshItems();
 
 		autorun(() -> {
-			hb.content = Std.string(sorcerer.health) + ' / ' + sorcerer.calculatedStats.get(Data.StatsKind.Health.toString());
+			healthBar.value = sorcerer.health / sorcerer.calculatedStats.getValue(Health);
+			healthText.content = Std.int(sorcerer.health) + ' / ' + sorcerer.calculatedStats.getValue(Health);
 		});
 	}
 

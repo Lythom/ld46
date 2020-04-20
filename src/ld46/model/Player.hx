@@ -10,6 +10,7 @@ enum GameState {
 	ShopEquipReady;
 	Battle;
 	BattleEnded;
+	OutOfTournament;
 }
 
 @:nullSafety(Off)
@@ -22,6 +23,8 @@ class Player extends Model {
 	@observe public var shop:Shop;
 	@observe public var shelf:Shelf;
 
+	public var boardEntities(get, null):Array<BoardEntity>;
+
 	public function new(playerName:String) {
 		super();
 		this.gameState = ShopEquip;
@@ -32,20 +35,23 @@ class Player extends Model {
 		shop = new Shop();
 		shelf = new Shelf();
 
+		chaleace.boardConfiguredX = 16;
+		chaleace.boardConfiguredY = 16;
+
 		var sorc = new Sorcerer();
 		sorcerers.add(sorc);
-		sorc.boardConfiguredX = 120;
-		sorc.boardConfiguredY = 0;
+		sorc.boardConfiguredX = 46;
+		sorc.boardConfiguredY = -52;
 
 		sorc = new Sorcerer();
 		sorcerers.add(sorc);
-		sorc.boardConfiguredX = -40;
-		sorc.boardConfiguredY = 80;
+		sorc.boardConfiguredX = 130;
+		sorc.boardConfiguredY = 45;
 
 		sorc = new Sorcerer();
 		sorcerers.add(sorc);
-		sorc.boardConfiguredX = -30;
-		sorc.boardConfiguredY = 30;
+		sorc.boardConfiguredX = -95;
+		sorc.boardConfiguredY = 38;
 
 		var counts = new StringMap<Int>();
 		shelf.onItemsChange(this, (current, _) -> {
@@ -59,7 +65,7 @@ class Player extends Model {
 				merged.level++;
 				for (out in outs) {
 					out.triggerMergeInto(merged);
-					ceramic.Timer.delay(this, 0.25, () -> shelf.remove(out));
+					ceramic.Timer.delay(this, 0.45, () -> shelf.remove(out));
 				}
 			}
 			for (idlvl => count in counts) {
@@ -96,6 +102,28 @@ class Player extends Model {
 				chaleace.y = chaleace.boardConfiguredY;
 			}
 		});
+	}
+
+	public function get_boardEntities() {
+		var arr:Array<BoardEntity> = [for (s in sorcerers) s];
+		arr.push(chaleace);
+		return arr;
+	}
+
+	public function initBattle() {
+		this.chaleace.lockIn = Data.configs.get(ChaleaceLockTimeInSec).sure().value;
+		for (sorcerer in this.sorcerers) {
+			sorcerer.health = sorcerer.calculatedStats.getValue(Health);
+			sorcerer.attackCooldown = 0;
+		}
+	}
+
+	public function moveToPlayerB() {
+		trace('set B pos pos ' + playerName);
+		for (sorc in sorcerers) {
+			sorc.moveToPlayerB();
+		}
+		chaleace.moveToPlayerB();
 	}
 
 	public function isWinnerOfLastBattle():Bool {

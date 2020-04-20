@@ -29,7 +29,7 @@ Le joueur lance le jeu
 		- Drag and drop item sur Trash détruit l'item définitivement
 		- Drag and drop item sur Personnage remplace avec l'item équipe sur le slot équivalent. Vise le personnage le plus proche dans la dropZone (< 200 px du personnage).
 		- Drag and drop personnage sur le terrain change sa position initiale. Dans les limites du terrain.
-		
+
 		- Click sur bouton "Next Round" déclenche la phase Combat
 			- hide shop
 			- hide next round button
@@ -38,12 +38,13 @@ Le joueur lance le jeu
 	- Phase Battle
 		- init phase
 			- [server] put shops back in the deck and shuffle
-			- [server] remove players shop credits
 			- [server] affect players into random battles
 			- [server] init battle data
 				- health point to max
 				- clear buff bonus list
+				- inverse playerB position
 			- display plateau double with opponent sorcerers and chaleace
+
 		- [server] update
 			- For each battle 
 				- for each chaleace
@@ -54,6 +55,8 @@ Le joueur lance le jeu
 						- if sorcerer is saboteur, target closest standing opponent Chaleace / saboteur / duelist / protector
 						- if sorcerer is duelist, target closest standing opponent duelist / saboteur / protector / Chaleace
 						- if sorcerer is Protector, target closest standing opponent saboteur / duelist / protector / Chaleace
+
+					- move closer, dodge going right
 					- try attack
 						- if attackcooldown is 0 attack and set attackcooldown to "1 / attackSpeed"
 						- if attackcooldown > 0 attackcooldown-= deltaTime
@@ -62,7 +65,7 @@ Le joueur lance le jeu
 							- trigger onHit effects
 							- if opponent.hp <= 0 opponent fall on the ground 
 							- if opponent.hp > 0 trigger opponent onDamaged effets
-		}
+		
 		- [server] a chaleace has no more HP, do Game Over
 		- [server] a team is entierly down, do End battle
 		- [server] no other opponent have a chaleace with hp > 0, do Game Over
