@@ -107,6 +107,17 @@ class SorcererTournament extends Model {
 		}
 		// TODO here: play AI turn
 		// non humain players should by stuff and change equipments
+		for (iPplayer in 1...players.length) {
+			var ai = players[iPplayer];
+			ai.shop.processPurchase(ai.shop.draw.first());
+			ai.shop.processPurchase(ai.shop.draw.first());
+			ai.shop.processPurchase(ai.shop.draw.first());
+			ai.equip(ai.shelf.items.array().pickRandom(), ai.sorcerers.array().pickRandom());
+			ai.equip(ai.shelf.items.array().pickRandom(), ai.sorcerers.array().pickRandom());
+			ai.equip(ai.shelf.items.array().pickRandom(), ai.sorcerers.array().pickRandom());
+			ai.equip(ai.shelf.items.array().pickRandom(), ai.sorcerers.array().pickRandom());
+			ai.equip(ai.shelf.items.array().pickRandom(), ai.sorcerers.array().pickRandom());
+		}
 	}
 
 	public function initDeck() {

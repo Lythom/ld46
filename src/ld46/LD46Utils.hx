@@ -10,6 +10,10 @@ class LD46Utils {
 	public static inline function randomInt(from:Int, to:Int):Int {
 		return from + Math.floor(((to - from + 1) * Math.random()));
 	}
+	
+	public static inline function pickRandom<T>(array:Array<T>):Null<T> {
+		return array[randomInt(0, array.length - 1)];
+	}
 
 	/** Return a random string of a certain length.  You can optionally specify 
 		which characters to use, otherwise the default is (a-zA-Z0-9) */

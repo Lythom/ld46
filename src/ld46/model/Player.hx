@@ -110,6 +110,16 @@ class Player extends Model {
 		return arr;
 	}
 
+	public function equip(item:SorcererItem, sorcerer:Sorcerer):Bool {
+		if (item == null || sorcerer == null)
+			return false;
+		shelf.remove(item);
+		var prev = sorcerer.equipItem(item);
+		if (prev != null)
+			shelf.put(prev);
+		return true;
+	}
+
 	public function placeOnConfiguredPositions() {
 		for (sorc in sorcerers) {
 			sorc.x = sorc.boardConfiguredX;

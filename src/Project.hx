@@ -42,10 +42,12 @@ class Project extends Entity {
 	}
 
 	function start(success:Bool) {
-		new HotLoader(() -> {
-			var castleDBContent = assets.text(Texts.CDB);
-			Data.load(castleDBContent);
-		});
+		// new HotLoader(() -> {
+		// 	var castleDBContent = assets.text(Texts.CDB);
+		// 	Data.load(castleDBContent);
+		// });
+		var castleDBContent = assets.text(Texts.CDB);
+		Data.load(castleDBContent);
 		new ld46.MainMenu(assets);
 	}
 }

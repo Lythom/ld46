@@ -1,5 +1,6 @@
 package ld46.components;
 
+import ceramic.Fonts;
 import ceramic.Point;
 import ceramic.Easing;
 import ld46.model.SorcererItem;
@@ -7,6 +8,8 @@ import ld46.model.Shelf;
 import ceramic.Images;
 import ceramic.Assets;
 import ceramic.Quad;
+import ceramic.Text;
+import ceramic.Color;
 import ceramic.Shortcuts.*;
 
 @:nullSafety(Off)
@@ -14,6 +17,11 @@ class ShelfActor extends Quad {
 	private var assets:Assets;
 	private var itemActorDirector:ItemActorDirector;
 	private var items:List<SorcererItemActor>;
+
+	public var description:Description;
+
+	private var creditsText:Text;
+	private var creditsTextBg:Quad;
 
 	public var shelf:Shelf;
 
@@ -39,10 +47,32 @@ class ShelfActor extends Quad {
 		this.shelf = shelf;
 		this.itemActorDirector = itemActorDirector;
 		this.items = shelf.items.map(item -> itemActorDirector.getItemActor(item));
+		this.creditsText = new Text();
+		this.creditsTextBg = new Quad();
+
+		creditsText.pointSize = 20;
+		creditsText.pos(25, -10);
+		creditsText.depth = 11;
+		creditsText.font = assets.font(Fonts.SIMPLY_MONO_60);
+		creditsText.content = 'Shelf - Drag and drop items to sorcerers or trash';
+		add(creditsText);
+		creditsTextBg.color = Color.BLACK;
+		creditsTextBg.alpha = 0.75;
+		creditsTextBg.size(400, 30);
+		creditsTextBg.pos(creditsText.x - 10, creditsText.y - 5);
+		creditsTextBg.depth = 10;
+		add(creditsTextBg);
+
 		refreshItems(shelf.items, null);
 		this.texture = assets.texture(Images.PRELOAD__SHELF);
 
 		shelf.onItemsChange(this, refreshItems);
+	}
+
+	override function destroy() {
+		if (description != null)
+			description.destroy();
+		super.destroy();
 	}
 
 	function refreshItems(newDraw:List<SorcererItem>, previousDraw:Null<List<SorcererItem>>) {
@@ -56,7 +86,7 @@ class ShelfActor extends Quad {
 		}
 		for (i => actor in this.items) {
 			var from = new Point();
-			actor.visualToScreen(0,0, from);
+			actor.visualToScreen(0, 0, from);
 			this.add(actor);
 			this.screenToVisual(from.x, from.y, from);
 			actor.pos(from.x + actor.width * actor.anchorX, from.y + actor.height * actor.anchorY);

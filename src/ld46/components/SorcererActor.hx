@@ -109,9 +109,9 @@ class SorcererActor extends Quad {
 				case Chest:
 					itemActor.pos(this.width * 0.5, this.height * 0.4);
 				case Top:
-					itemActor.pos(this.width * 0.5, 0 - itemActor.height * 0.30);
+					itemActor.pos(this.width * 0.5, 0 - itemActor.height * 0.35);
 				case Hand:
-					itemActor.pos(0 - itemActor.width * 0.3, this.height * 0.3);
+					itemActor.pos(0 - itemActor.width * 0.3, this.height * 0.35);
 			}
 			wireItem(itemActor);
 		}

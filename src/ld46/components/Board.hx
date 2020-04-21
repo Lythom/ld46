@@ -99,10 +99,7 @@ class Board extends Quad {
 			shelf.onDropItemAt(this, (itemActor, x, y) -> {
 				var sorc = getClosest(x, y);
 				if (sorc != null && shelf != null) {
-					shelf.sure().shelf.remove(itemActor.item);
-					var prev = sorc.sorcerer.equipItem(itemActor.item);
-					if (prev != null)
-						shelf.sure().shelf.put(prev);
+					player.equip(itemActor.item, sorc.sorcerer);
 				}
 			});
 

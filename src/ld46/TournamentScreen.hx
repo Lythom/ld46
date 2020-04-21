@@ -1,5 +1,6 @@
 package ld46;
 
+import ceramic.Point;
 import ceramic.Timer;
 import ceramic.Tween;
 import ceramic.Fonts;
@@ -108,7 +109,7 @@ class TournamentScreen extends Visual {
 				if (localPlayer.shelf.hasHiddenTempItem()) {
 					trace("was on shelf but has not been merged: removed.");
 					localPlayer.shelf.remove(item);
-					app.onceUpdate(this, delta -> {
+					ceramic.Timer.delay(this, 0.1, () -> {
 						localPlayer.shop.invalidateDraw();
 					});
 				}
@@ -129,7 +130,7 @@ class TournamentScreen extends Visual {
 				localPlayer.shop.drawItems(SorcererTournament.debugInstance);
 			}
 		});
-		HotLoader.instance.onReload(this, updatePlacements);
+		// HotLoader.instance.onReload(this, updatePlacements);
 
 		updatePlacements();
 

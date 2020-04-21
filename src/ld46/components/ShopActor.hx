@@ -1,5 +1,6 @@
 package ld46.components;
 
+import ceramic.Fonts;
 import ceramic.Point;
 import ceramic.Color;
 import ceramic.Easing;
@@ -35,19 +36,20 @@ class ShopActor extends Quad {
 
 		refreshItems(shop.draw, null);
 
-		creditsText.pointSize = 30;
-		creditsText.pos(this.width - creditsText.width / 2 - 10, -creditsText.height - 10);
+		creditsText.pointSize = 20;
+		creditsText.pos(25, -10);
 		creditsText.depth = 11;
+		creditsText.font = assets.font(Fonts.SIMPLY_MONO_60);
 		add(creditsText);
 		creditsTextBg.color = Color.BLACK;
-		creditsTextBg.alpha = 0.8;
-		creditsTextBg.size(40, 40);
-		creditsTextBg.pos(creditsText.x, creditsText.y);
+		creditsTextBg.alpha = 0.75;
+		creditsTextBg.size(260, 20);
+		creditsTextBg.pos(creditsText.x - 10, creditsText.y - 5);
 		creditsTextBg.depth = 10;
 		add(creditsTextBg);
 
 		autorun(() -> {
-			this.creditsText.content = Std.string(shop.credits);
+			this.creditsText.content = 'Shop - credits: ' + Std.string(shop.credits);
 		});
 		this.shop.onDrawChange(this, refreshItems);
 	}

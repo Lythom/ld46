@@ -90,10 +90,10 @@ class TableVariableProject extends Entity {
 
 	function start(success:Bool) {
 
-		new HotLoader(() -> {
-			var castleDBContent = assets.text(Texts.PRELOAD__CDB);
-			Data.load(castleDBContent);
-		});
+		// new HotLoader(() -> {
+		// 	var castleDBContent = assets.text(Texts.PRELOAD__CDB);
+		// 	Data.load(castleDBContent);
+		// });
 
 		var text:Text = new Text();
 
@@ -302,7 +302,7 @@ class TableVariableProject extends Entity {
 			text.content = Data.entities.all[0].description;
 			new ceramic.Particles();
 		}
-		HotLoader.instance.onReload(this, reload);
+		// HotLoader.instance.onReload(this, reload);
 		reload();
 	} // ready
 }

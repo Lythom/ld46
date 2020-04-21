@@ -18,7 +18,7 @@ class SorcererItemActor extends Quad {
 		this.assets = assets;
 		this.description = new Description(getDescription(item));
 
-		HotLoader.instance.onReload(this, loadContent);
+		// HotLoader.instance.onReload(this, loadContent);
 		loadContent();
 
 		autorun(() -> {
