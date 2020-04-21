@@ -36,13 +36,15 @@ class SorcererTournament extends Model {
 			var livingPlayers = players.filter(p -> p.chaleace.health > 0);
 			initBattlePhase(livingPlayers);
 			for (p in livingPlayers) {
-				p.gameState = Battle;
+				if (p.gameState == ShopEquipReady)
+					p.gameState = Battle;
 			}
 		}
 		if (players.foreach(p -> p.gameState == BattleEnded || p.gameState == OutOfTournament)) {
 			initPhaseShopEquip();
 			for (player in players) {
-				player.gameState = ShopEquip;
+				if (player.gameState == BattleEnded)
+					player.gameState = ShopEquip;
 			}
 		}
 		if (players.count(p -> p.gameState == OutOfTournament) >= players.length - 1) {

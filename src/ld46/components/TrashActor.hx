@@ -17,11 +17,13 @@ class TrashActor extends Quad {
 		this.assets = assets;
 		this.texture = assets.texture(Images.PRELOAD__TRASH);
 
+		this.scale(0.6, 0.6);
+
 		this.onPointerOver(this, evt -> {
-			this.scale(1.1, 1.1);
+			this.scale(0.7, 0.7);
 		});
 		this.onPointerOut(this, evt -> {
-			this.scale(1, 1);
+			this.scale(0.6, 0.6);
 		});
 
 		shelf.onDropItemAt(this, (itemActor, x, y) -> {

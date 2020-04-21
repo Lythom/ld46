@@ -693,7 +693,7 @@
 				},
 				{
 					"Id": "ChaleaceHealth",
-					"value": 1000
+					"value": 2000
 				},
 				{
 					"Id": "DescWidth",
@@ -705,7 +705,7 @@
 				},
 				{
 					"Id": "ChaleaceLockTimeInSec",
-					"value": 7
+					"value": 5
 				},
 				{
 					"Id": "MoveSpeed",

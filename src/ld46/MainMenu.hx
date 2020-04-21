@@ -1,5 +1,6 @@
 package ld46;
 
+import ceramic.Easing;
 import ceramic.Fonts;
 import ceramic.KeyCode;
 import ld46.components.BarActor;
@@ -13,7 +14,8 @@ import ceramic.Shortcuts.*;
 
 @:nullSafety(Strict)
 class MainMenu extends Visual {
-	var text:Text;
+
+	var bg:Quad;
 	var test:Quad;
 
 	var assets:Assets;
@@ -21,9 +23,11 @@ class MainMenu extends Visual {
 	public function new(assets:Assets) {
 		super();
 		this.assets = assets;
-		text = new Text();
-		text.pos(screen.width / 2, 100);
+
 		test = new Quad();
+		bg = new Quad();
+
+
 		test.onPointerDown(this, evt -> {
 			this.destroy();
 			var tournament = new SorcererTournament();
@@ -31,7 +35,21 @@ class MainMenu extends Visual {
 			var player = allPlayer[0];
 			new TournamentScreen(assets, player, allPlayer, tournament);
 		});
-		this.add(text);
+		test.onPointerOver(this, evt -> {
+			test.transition(Easing.QUAD_EASE_OUT, 0.25, props -> {
+				props.scale(1.1, 1.1);
+			});
+		});
+		test.onPointerOut(this, evt -> {
+			test.transition(Easing.QUAD_EASE_OUT, 0.25, props -> {
+				props.scale(1, 1);
+			});
+		});
+		test.depth = 2;
+		test.pos(screen.width * 0.5, screen.height * 0.5);
+		test.anchor(0.5, 0.5);
+		
+		this.add(bg);
 		this.add(test);
 
 
@@ -47,8 +65,8 @@ class MainMenu extends Visual {
 	}
 
 	function loadContent() {
-		text.content = "Sorcerer Tournament";
-		test.texture = assets.texture(Images.PRELOAD__NEXT_ROUND_BUTTON);
+		test.texture = assets.texture(Images.PRELOAD__PLAY);
+		bg.texture = assets.texture(Images.PRELOAD__KEYART);
 	}
 
 	function update(delta:Float) {}

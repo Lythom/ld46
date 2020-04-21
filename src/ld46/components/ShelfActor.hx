@@ -58,7 +58,7 @@ class ShelfActor extends Quad {
 		add(creditsText);
 		creditsTextBg.color = Color.BLACK;
 		creditsTextBg.alpha = 0.75;
-		creditsTextBg.size(400, 30);
+		creditsTextBg.size(650, 30);
 		creditsTextBg.pos(creditsText.x - 10, creditsText.y - 5);
 		creditsTextBg.depth = 10;
 		add(creditsTextBg);
