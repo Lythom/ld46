@@ -1,5 +1,6 @@
 package ld46.components;
 
+import ceramic.Fonts;
 import lythom.stuffme.AttributeValues;
 import ceramic.Easing;
 import ld46.ItemActorDirector;
@@ -20,7 +21,7 @@ class SorcererActor extends Quad {
 	private var healthText:Text;
 	private var healthBar:BarActor;
 
-	private var description:Description;
+	public var description:Description;
 
 	public function new(assets:Assets, sorcerer:Sorcerer, itemActorDirector:ItemActorDirector, opponent:Bool = false) {
 		super();
@@ -39,13 +40,13 @@ class SorcererActor extends Quad {
 		this.size(50, 160);
 		this.scale(0.9 + Math.random() * 0.2, 0.9 + Math.random() * 0.2);
 
-		healthText.pos(0, -25);
-		healthText.pointSize = 10;
+		healthText.pos(20, -20);
+		healthText.font = assets.font(Fonts.SIMPLY_MONO_60);
+		healthText.pointSize = 15;
 		add(healthText);
 
 		healthBar.pos(0, -25);
 		healthBar.size(width, 25);
-		healthBar.depth = 2;
 		add(healthBar);
 		healthBar.refresh();
 
@@ -56,9 +57,11 @@ class SorcererActor extends Quad {
 
 		sorcerer.offAttackTarget();
 		sorcerer.onAttackTarget(this, (from, target, damage) -> {
-			var offsetX = x - from.x;
-			var offsetY = y - from.y;
-			new ld46.fx.AttackFX(x, y - 100, target.x + offsetX, target.y + offsetY - 100, damage);
+			var travelX = target.x - from.x;
+			var travelY = target.y - from.y;
+			var startX = this.width * 0.5;
+			var startY = this.height * 0.5;
+			add(new ld46.fx.AttackFX(startX, startY, startX + travelX, startY + travelY, damage));
 		});
 
 		var p = new Point();
@@ -86,11 +89,21 @@ class SorcererActor extends Quad {
 
 		autorun(() -> {
 			healthBar.value = sorcerer.health / sorcerer.calculatedStats.getValue(Health);
-			healthText.content = Std.int(sorcerer.health) + ' / ' + sorcerer.calculatedStats.getValue(Health);
+			healthText.content = '' + Std.int(sorcerer.health);
+
 			healthBar.width = this.width;
 			healthBar.refresh();
 			this.active = sorcerer.health > 0;
 		});
+	}
+
+	public function updateDepth(value:Float) {
+		this.depth = value;
+		for (actor in items) {
+			actor.depth = this.depth + 0.1;
+		}
+		healthBar.depth = this.depth + 0.2;
+		healthText.depth = healthBar.depth + 1;
 	}
 
 	public function getDescription():String {

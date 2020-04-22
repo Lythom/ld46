@@ -18,8 +18,6 @@ class ShelfActor extends Quad {
 	private var itemActorDirector:ItemActorDirector;
 	private var items:List<SorcererItemActor>;
 
-	public var description:Description;
-
 	private var creditsText:Text;
 	private var creditsTextBg:Quad;
 
@@ -67,12 +65,6 @@ class ShelfActor extends Quad {
 		this.texture = assets.texture(Images.PRELOAD__SHELF);
 
 		shelf.onItemsChange(this, refreshItems);
-	}
-
-	override function destroy() {
-		if (description != null)
-			description.destroy();
-		super.destroy();
 	}
 
 	function refreshItems(newDraw:List<SorcererItem>, previousDraw:Null<List<SorcererItem>>) {

@@ -29,15 +29,15 @@ class TrashActor extends Quad {
 		shelf.onDropItemAt(this, (itemActor, x, y) -> {
 			if (this.hits(x, y)) {
 				this.emitThrowItem(itemActor.item);
-				this.scale(1, 1);
+				this.scale(0.6, 0.6);
 			}
 		});
 
 		shelf.onMoveItemAt(this, (itemActor, x, y) -> {
 			if (this.hits(x, y)) {
-				this.scale(1.1, 1.1);
+				this.scale(0.7, 0.7);
 			} else {
-				this.scale(1, 1);
+				this.scale(0.6, 0.6);
 			}
 		});
 	}

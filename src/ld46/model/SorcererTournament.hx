@@ -32,25 +32,25 @@ class SorcererTournament extends Model {
 	}
 
 	public function update(delta:Float) {
-		if (players.foreach(p -> p.gameState == ShopEquipReady || p.gameState == OutOfTournament)) {
-			var livingPlayers = players.filter(p -> p.chaleace.health > 0);
+		var livingPlayers = players.filter(p -> p.gameState != OutOfTournament && p.gameState != Winner);
+
+		if (livingPlayers.foreach(p -> p.gameState == ShopEquipReady)) {
 			initBattlePhase(livingPlayers);
 			for (p in livingPlayers) {
 				if (p.gameState == ShopEquipReady)
 					p.gameState = Battle;
 			}
 		}
-		if (players.foreach(p -> p.gameState == BattleEnded || p.gameState == OutOfTournament)) {
+		if (livingPlayers.foreach(p -> p.gameState == BattleEnded)) {
 			initPhaseShopEquip();
 			for (player in players) {
 				if (player.gameState == BattleEnded)
 					player.gameState = ShopEquip;
 			}
 		}
-		if (players.count(p -> p.gameState == OutOfTournament) >= players.length - 1) {
-			var winner = players.find(p -> p.gameState != OutOfTournament);
-			if (winner != null) {
-				winner.gameState = Winner;
+		if (livingPlayers.length <= 1) {
+			for (player in livingPlayers) {
+				player.gameState = Winner;
 			}
 			app.offUpdate(update);
 		}
@@ -81,7 +81,7 @@ class SorcererTournament extends Model {
 				if (idxB == 0)
 					trace('player should have been B side -> swapped to A');
 				battle = new Battle(playerA, playerB);
-				trace('creating battle ${battle.idBattle} with ${battle.playerA.playerName} (${idxA}) and ${battle.playerB.playerName} (${idxB})');
+				trace('creating battle ${battle.idBattle} with\n  * A ${battle.playerA.playerName}\n  * B ${battle.playerB.playerName}');
 				activeBattles.push(battle);
 				battle.onceWinnerChange(this, (winner, _) -> {
 					if (winner == null)

@@ -16,6 +16,8 @@ enum GameState {
 
 @:nullSafety(Off)
 class Player extends Model {
+	public static var PLAYER_ID = 0;
+
 	@observe public var gameState:GameState = ShopEquip;
 	@observe public var playerName:String;
 	@observe public var sorcerers:List<Sorcerer>;
@@ -31,7 +33,7 @@ class Player extends Model {
 	public function new(playerName:String) {
 		super();
 		this.gameState = ShopEquip;
-		this.playerName = playerName;
+		this.playerName = playerName + ' (' + PLAYER_ID++ + ')';
 		battles = new List<Battle>();
 		sorcerers = new List<Sorcerer>();
 		chaleace = new Chaleace();
@@ -91,6 +93,10 @@ class Player extends Model {
 					}
 				}
 			}
+		});
+
+		autorun(() -> {
+			trace(this.playerName + ' chaleace at: ' + chaleace.x);
 		});
 
 		autorun(() -> {

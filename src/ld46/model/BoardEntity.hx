@@ -50,6 +50,6 @@ class BoardEntity extends tracker.Model {
 		x = -x;
 		y = -y;
 		x += 398;
-		y -= 168;
+		y -= 173;
 	}
 }

@@ -146,7 +146,6 @@ class TournamentScreen extends Visual {
 				transitionDisable(opponentBoard, Data.placements.get(OpponentBoard).sure(), 1000, -500);
 				Timer.delay(this, 1, () -> opponentBoard.setActive(false));
 			}
-			mainBoard.depth = 3;
 			mainBoard.transition(Easing.QUAD_EASE_OUT, 1, props -> {
 				props.x = Data.placements.get(MainBoardShop).sure().x;
 				props.y = Data.placements.get(MainBoardShop).sure().y;
@@ -167,9 +166,10 @@ class TournamentScreen extends Visual {
 		} else if (localPlayer.gameState == Battle) {
 			new ld46.fx.AnnounceFX('BATTLE START', assets.font(Fonts.SIMPLY_MONO_60));
 			if (opponentBoard != null) {
-				opponentBoard.depth = 2;
+				add(opponentBoard);
 				transitionActivate(opponentBoard, Data.placements.get(OpponentBoard).sure(), 1000, -500);
 				opponentBoard.setActive(true);
+				opponentBoard.depth = 2;
 			}
 			trace("Battle");
 		} else if (localPlayer.gameState == BattleEnded) {

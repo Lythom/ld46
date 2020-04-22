@@ -56,7 +56,7 @@ Le joueur lance le jeu
 						- if sorcerer is duelist, target closest standing opponent duelist / saboteur / protector / Chaleace
 						- if sorcerer is Protector, target closest standing opponent saboteur / duelist / protector / Chaleace
 
-					- move closer, dodge going right
+					- move closer
 					- try attack
 						- if attackcooldown is 0 attack and set attackcooldown to "1 / attackSpeed"
 						- if attackcooldown > 0 attackcooldown-= deltaTime
@@ -86,3 +86,10 @@ Le Shelf contient 12 emplacements (configurable).
 
 
 top board offset (+398, -168)
+
+
+
+- Fix affichage des items des opponents
+- Fix calage des boards
+- Fix début différé des fights
+- Fix Add "waiting other battles"

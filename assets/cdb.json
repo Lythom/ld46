@@ -594,20 +594,29 @@
 				{
 					"typeStr": "0",
 					"name": "id"
+				},
+				{
+					"typeStr": "1",
+					"name": "description",
+					"kind": "localizable"
 				}
 			],
 			"lines": [
 				{
-					"id": "Duelist"
+					"id": "Duelist",
+					"description": "Focus other Duelists"
 				},
 				{
-					"id": "Protector"
+					"id": "Protector",
+					"description": "Focus Saboteurs"
 				},
 				{
-					"id": "Saboteur"
+					"id": "Saboteur",
+					"description": "Focus Protector"
 				},
 				{
-					"id": "Chaleace"
+					"id": "Chaleace",
+					"description": "Protect your Chaleace and destroy your opponent ones to kick them out the the tournament.\\nChaleace are vulnerable only a few seconds on the start of each fight.\\nSaboteurs will focus the Chaleace first. Use Protectors to focus Saboteurs before they damage the chaleace too much."
 				}
 			],
 			"separators": [],
