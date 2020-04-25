@@ -18,7 +18,7 @@ class SorcererItemActor extends Quad {
 		this.assets = assets;
 		this.description = new Description(getDescription(item));
 
-		// HotLoader.instance.onReload(this, loadContent);
+		HotLoader.instance.onReload(this, loadContent);
 		loadContent();
 
 		autorun(() -> {
@@ -31,11 +31,11 @@ class SorcererItemActor extends Quad {
 				case 2:
 					description.text.color = ceramic.Color.CYAN;
 					description.color = ceramic.Color.PURPLE;
-					this.color = ceramic.Color.fromHSLuv(207, 1, 94);
+					this.color = ceramic.Color.fromHSLuv(207, 1, 70);
 				case 3:
 					description.text.color = ceramic.Color.YELLOW;
 					description.color = ceramic.Color.ORANGE;
-					this.color = ceramic.Color.fromHSLuv(76, 1, 94);
+					this.color = ceramic.Color.fromHSLuv(76, 1, 70);
 				default:
 			}
 		});
@@ -74,10 +74,10 @@ class SorcererItemActor extends Quad {
 		var itemEffects:CalculatedStuff = (new AttributeValues()).with([item]);
 		
 		return ''
-			+ '${(item.itemData.set != null ? '"${item.itemData.set.sure().id}" ' : ' ') + Data.Items_slot.NAMES[item.itemData.slot.toInt()]} Level ${item.level}\n'
+			+ '${(item.itemData.set != null ? '"${item.itemData.set.sure().id}" ' : ' ') + Data.Items_slot.NAMES[item.itemData.slot.toInt()]} (Level ${item.level})\n'
 			// + (item.itemData.set != null ? 'Set "${item.itemData.set.sure().id}"\nSet bonus :${item.itemData.set.sure().bonusDescription}\n' : '')
-			+ (item.itemData.provideRole != null ? 'Provide "${item.itemData.provideRole.sure().id}"\n' : '')
-			+ (item.itemData.provideBonus != null ? 'Gives:\n  * ${itemEffects.items[0].bonuses.map(bd -> bd.description).join(',\n  * ')}\n' : '')
+			+ (item.itemData.provideRole != null ? 'PROVIDE "${item.itemData.provideRole.sure().id}": ${item.itemData.provideRole.sure().description}\n' : '')
+			+ (item.itemData.provideBonus != null ? 'GIVES:\n  * ${itemEffects.items[0].bonuses.map(bd -> bd.description).join(',\n  * ')}\n' : '')
 			//+ 'Id:${item.id}'
 			;
 	}

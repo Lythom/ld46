@@ -1,5 +1,6 @@
 package ld46.components;
 
+import ld46.model.Player;
 import ceramic.Fonts;
 import ceramic.Point;
 import ceramic.Color;
@@ -15,26 +16,24 @@ import ceramic.Shortcuts.*;
 @:nullSafety(Off)
 class ShopActor extends Quad {
 	private var assets:Assets;
-	private var shop:Shop;
+	private var player:Player;
 	private var creditsText:Text;
 	private var creditsTextBg:Quad;
-	private var items:List<SorcererItemActor>;
+	private var items:Array<SorcererItemActor>;
 
 	private var itemActorDirector:ItemActorDirector;
 
-	@event function purchaseItem(item:SorcererItem):Void;
-
-	public function new(assets:Assets, shop:Shop, itemActorDirector:ItemActorDirector) {
+	public function new(assets:Assets, player:Player, itemActorDirector:ItemActorDirector) {
 		super();
 		this.assets = assets;
-		this.shop = shop;
+		this.player = player;
 		this.itemActorDirector = itemActorDirector;
 		this.creditsText = new Text();
 		this.creditsTextBg = new Quad();
-		this.items = shop.draw.map(item -> itemActorDirector.getItemActor(item));
+		this.items = player.shop.draw.map(item -> itemActorDirector.getItemActor(item));
 		this.texture = assets.texture(Images.PRELOAD__SHOP);
 
-		refreshItems(shop.draw, null);
+		refreshItems(player.shop.draw, null);
 
 		creditsText.pointSize = 20;
 		creditsText.pos(25, -10);
@@ -49,21 +48,22 @@ class ShopActor extends Quad {
 		add(creditsTextBg);
 
 		autorun(() -> {
-			this.creditsText.content = 'Shop - credits: ' + Std.string(shop.credits);
+			this.creditsText.content = 'Shop - credits: ' + Std.string(player.shop.credits);
 		});
-		this.shop.onDrawChange(this, refreshItems);
+		this.player.shop.onDrawChange(this, refreshItems);
 	}
 
-	function refreshItems(newDraw:List<SorcererItem>, previousDraw:Null<List<SorcererItem>>) {
+	function refreshItems(newDraw:Array<SorcererItem>, previousDraw:Null<Array<SorcererItem>>) {
 		var padding = Data.placements.get(ShelfPadding).sure().x;
-		this.items = shop.draw.map(item -> itemActorDirector.getItemActor(item));
+		this.items = player.shop.draw.map(item -> itemActorDirector.getItemActor(item));
 		var deletes = this.children == null ? [] : this.children.filter(child -> child != null && Std.is(child, SorcererItemActor)
 			&& !this.items.has(cast child));
 		for (deleteMe in deletes) {
 			this.remove(deleteMe);
 			itemActorDirector.giveBack(cast deleteMe);
 		}
-		for (i => actor in this.items) {
+		var i = 0;
+		for (actor in this.items) {
 			var x = padding + actor.width / 2 + (actor.width + padding) * i;
 			var y = this.height / 2;
 			add(actor);
@@ -72,7 +72,7 @@ class ShopActor extends Quad {
 			actor.onPointerDown(this, evt -> {
 				screen.oncePointerUp(this, evt -> {
 					if (actor.hits(evt.x, evt.y))
-						this.emitPurchaseItem(actor.item);
+						player.tryPurchaseItem(actor.item);
 				});
 			});
 			actor.offPointerOver();
@@ -91,6 +91,7 @@ class ShopActor extends Quad {
 				});
 				actor.hideDescription();
 			});
+			i++;
 		}
 	}
 }

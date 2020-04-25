@@ -4,13 +4,14 @@ import tracker.Model;
 
 @:nullSafety(Off)
 class Shop extends Model {
-	@observe public var draw:List<SorcererItem>;
+	@observe public var draw:Array<SorcererItem>;
 	@observe public var credits:Int = 0;
+
+	@event function purchaseItem(item:SorcererItem):Void;
 
 	public function new() {
 		super();
-		draw = new List<SorcererItem>();
-		
+		draw = new Array<SorcererItem>();
 	}
 
 	public function drawItems(game:SorcererTournament) {
@@ -31,7 +32,7 @@ class Shop extends Model {
 	public function processPurchase(item:SorcererItem):Bool {
 		if (!canBuy())
 			return false;
-		credits --;
+		credits--;
 		var result = draw.remove(item);
 		this.invalidateDraw();
 		return result;

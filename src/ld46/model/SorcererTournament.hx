@@ -32,25 +32,26 @@ class SorcererTournament extends Model {
 	}
 
 	public function update(delta:Float) {
-		if (players.foreach(p -> p.gameState == ShopEquipReady || p.gameState == OutOfTournament)) {
-			var livingPlayers = players.filter(p -> p.chaleace.health > 0);
+		var livingPlayers = players.filter(p -> p.gameState != OutOfTournament && p.gameState != Winner);
+
+		if (livingPlayers.foreach(p -> p.gameState == ShopEquipReady)) {
 			initBattlePhase(livingPlayers);
 			for (p in livingPlayers) {
-				if (p.gameState == ShopEquipReady)
-					p.gameState = Battle;
+				var battle = p.battles.last();
+				var opponent = (battle == null ? null : (battle.playerA == p ? battle.playerB : battle.playerA));
+				p.gameState = BattleStart(opponent);
 			}
 		}
-		if (players.foreach(p -> p.gameState == BattleEnded || p.gameState == OutOfTournament)) {
+		if (livingPlayers.foreach(p -> p.gameState == BattleEnded)) {
 			initPhaseShopEquip();
 			for (player in players) {
 				if (player.gameState == BattleEnded)
 					player.gameState = ShopEquip;
 			}
 		}
-		if (players.count(p -> p.gameState == OutOfTournament) >= players.length - 1) {
-			var winner = players.find(p -> p.gameState != OutOfTournament);
-			if (winner != null) {
-				winner.gameState = Winner;
+		if (livingPlayers.length <= 1) {
+			for (player in livingPlayers) {
+				player.gameState = Winner;
 			}
 			app.offUpdate(update);
 		}
@@ -81,7 +82,7 @@ class SorcererTournament extends Model {
 				if (idxB == 0)
 					trace('player should have been B side -> swapped to A');
 				battle = new Battle(playerA, playerB);
-				trace('creating battle ${battle.idBattle} with ${battle.playerA.playerName} (${idxA}) and ${battle.playerB.playerName} (${idxB})');
+				trace('creating battle ${battle.idBattle} with\n  * A ${battle.playerA.playerName}\n  * B ${battle.playerB.playerName}');
 				activeBattles.push(battle);
 				battle.onceWinnerChange(this, (winner, _) -> {
 					if (winner == null)
@@ -94,6 +95,7 @@ class SorcererTournament extends Model {
 				battle = new Battle(livingPlayers[idxA], null);
 				finishedBattles.push(battle);
 			}
+			trace('pushing battles ${battle.idBattle}');
 			battle.playerA.battles.push(battle);
 			if (battle.playerB != null)
 				battle.playerB.battles.push(battle);
@@ -111,9 +113,9 @@ class SorcererTournament extends Model {
 		// non humain players should by stuff and change equipments
 		for (iPplayer in 1...players.length) {
 			var ai = players[iPplayer];
-			ai.shop.processPurchase(ai.shop.draw.first());
-			ai.shop.processPurchase(ai.shop.draw.first());
-			ai.shop.processPurchase(ai.shop.draw.first());
+			ai.tryPurchaseItem(ai.shop.draw.first());
+			ai.tryPurchaseItem(ai.shop.draw.first());
+			ai.tryPurchaseItem(ai.shop.draw.first());
 			ai.equip(ai.shelf.items.array().pickRandom(), ai.sorcerers.array().pickRandom());
 			ai.equip(ai.shelf.items.array().pickRandom(), ai.sorcerers.array().pickRandom());
 			ai.equip(ai.shelf.items.array().pickRandom(), ai.sorcerers.array().pickRandom());
@@ -137,16 +139,16 @@ class SorcererTournament extends Model {
 		deck.shuffle();
 	}
 
-	public function drawFromDeck(count:Int, draw:List<SorcererItem>) {
+	public function drawFromDeck(count:Int, draw:Array<SorcererItem>) {
 		deck.shuffle();
 		for (i in 0...count) {
 			var item = deck.pop();
 			if (item != null)
-				draw.add(item);
+				draw.push(item);
 		}
 	}
 
-	public function returnToDeck(draw:List<SorcererItem>) {
+	public function returnToDeck(draw:Array<SorcererItem>) {
 		for (item in draw) {
 			deck.push(item);
 		}

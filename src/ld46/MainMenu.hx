@@ -60,7 +60,7 @@ class MainMenu extends Visual {
 			}
 		});
 
-		// HotLoader.instance.onReload(this, loadContent);
+		HotLoader.instance.onReload(this, loadContent);
 		loadContent();
 	}
 

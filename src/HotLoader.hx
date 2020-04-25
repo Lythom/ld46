@@ -8,7 +8,7 @@ class HotLoader extends ceramic.Entity {
 
     public function new(loadObservableAsset:Void->Void) {
         super();
-        // autorun(loadObservableAsset, this.emitReload);
+        autorun(loadObservableAsset, this.emitReload);
         instance = this;
     }
 

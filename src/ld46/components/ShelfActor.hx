@@ -16,9 +16,7 @@ import ceramic.Shortcuts.*;
 class ShelfActor extends Quad {
 	private var assets:Assets;
 	private var itemActorDirector:ItemActorDirector;
-	private var items:List<SorcererItemActor>;
-
-	public var description:Description;
+	private var items:Array<SorcererItemActor>;
 
 	private var creditsText:Text;
 	private var creditsTextBg:Quad;
@@ -69,22 +67,17 @@ class ShelfActor extends Quad {
 		shelf.onItemsChange(this, refreshItems);
 	}
 
-	override function destroy() {
-		if (description != null)
-			description.destroy();
-		super.destroy();
-	}
-
-	function refreshItems(newDraw:List<SorcererItem>, previousDraw:Null<List<SorcererItem>>) {
+	function refreshItems(newDraw:Array<SorcererItem>, previousDraw:Null<Array<SorcererItem>>) {
 		this.items = newDraw.map(item -> itemActorDirector.getItemActor(item));
 		var padding = Data.placements.get(ShelfPadding).sure().x;
 		var deletes = this.children == null ? [] : this.children.filter(child -> child != null && Std.is(child, SorcererItemActor)
 			&& !this.items.has(cast child));
 		for (deleteMe in deletes) {
 			this.remove(deleteMe);
-			itemActorDirector.giveBack(cast deleteMe);
+			ceramic.Timer.delay(this, 0.5, () -> itemActorDirector.giveBack(cast deleteMe));
 		}
-		for (i => actor in this.items) {
+		var i = 0;
+		for (actor in this.items) {
 			var from = new Point();
 			actor.visualToScreen(0, 0, from);
 			this.add(actor);
@@ -94,7 +87,6 @@ class ShelfActor extends Quad {
 			var y = this.height / 2;
 			if (actor.x != x || actor.y != y) {
 				actor.transition(Easing.QUAD_EASE_OUT, 0.45, props -> {
-					trace("to shelf");
 					props.x = x;
 					props.y = y;
 				});
@@ -135,6 +127,7 @@ class ShelfActor extends Quad {
 				});
 				actor.hideDescription();
 			});
+			i++;
 		}
 	}
 }

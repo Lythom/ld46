@@ -30,7 +30,7 @@ class Description extends Quad {
 
 		this.anchor(1, 1);
 
-		// HotLoader.instance.onReload(this, refresh);
+		HotLoader.instance.onReload(this, refresh);
 		refresh();
 	}
 

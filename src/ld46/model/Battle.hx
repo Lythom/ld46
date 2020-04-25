@@ -5,6 +5,7 @@ import tracker.Model;
 @:nullSafety(Off)
 class Battle extends Model {
 	public static var ID:Int = 0;
+
 	public var playerA:Player;
 	public var playerB:Player;
 	public var idBattle:Int;
@@ -22,21 +23,23 @@ class Battle extends Model {
 		if (this.playerA == null)
 			throw 'playerA required';
 
-		if (playerB != null) {
-			// init player board
-			playerA.resetEntities();
-			playerB.resetEntities();
-			playerB.moveToPlayerB();
+		app.onceUpdate(this, delta -> {
+			if (playerB != null) {
+				// init player board
+				playerA.resetEntities();
+				playerB.resetEntities();
+				playerB.moveToPlayerB();
 
-			for (s in this.playerA.sorcerers)
-				s.onAttackTarget(this, handleAttack);
-			for (s in playerB.sorcerers)
-				s.onAttackTarget(this, handleAttack);
-		} else {
-			winner = this.playerA;
-			this.playerA.gameState = BattleEnded;
-			endBattle();
-		}
+				for (s in this.playerA.sorcerers)
+					s.onAttackTarget(this, handleAttack);
+				for (s in playerB.sorcerers)
+					s.onAttackTarget(this, handleAttack);
+			} else {
+				winner = this.playerA;
+				this.playerA.gameState = BattleEnded;
+				endBattle();
+			}
+		});
 	}
 
 	public function handleAttack(from:BoardEntity, target:BoardEntity, attack:Float):Void {
@@ -64,14 +67,14 @@ class Battle extends Model {
 			trace("Elminated :" + playerB.playerName);
 			trace("Winner :" + playerA.playerName);
 		}
-		if (playerA.sorcerers.foreach(s -> s.health <= 0)) {
+		if (playerA.sorcerers.foreach(s -> s.health <= 0) && playerA.chaleace.lockIn <= 0) {
 			winner = playerB;
 			endBattle();
 			playerA.gameState = BattleEnded;
 			playerB.gameState = BattleEnded;
 			trace("Winner :" + playerB.playerName);
 		}
-		if (playerB.sorcerers.foreach(s -> s.health <= 0)) {
+		if (playerB.sorcerers.foreach(s -> s.health <= 0) && playerB.chaleace.lockIn <= 0) {
 			winner = playerA;
 			endBattle();
 			playerA.gameState = BattleEnded;

@@ -34,7 +34,9 @@ class Project extends Entity {
 
 	function ready() {
 		assets.addFont(Fonts.SIMPLY_MONO_60);
-		// assets.watchDirectory(ceramic.macros.DefinesMacro.getDefine('assets_path'));
+		#if debug
+		assets.watchDirectory(ceramic.macros.DefinesMacro.getDefine('assets_path'));
+		#end
 		assets.addAll(~/^preload\//);
 		assets.add(Texts.CDB);
 		assets.onceComplete(this, start);
@@ -42,12 +44,10 @@ class Project extends Entity {
 	}
 
 	function start(success:Bool) {
-		// new HotLoader(() -> {
-		// 	var castleDBContent = assets.text(Texts.CDB);
-		// 	Data.load(castleDBContent);
-		// });
-		var castleDBContent = assets.text(Texts.CDB);
-		Data.load(castleDBContent);
+		new HotLoader(() -> {
+			var castleDBContent = assets.text(Texts.CDB);
+			Data.load(castleDBContent);
+		});
 		new ld46.MainMenu(assets);
 	}
 }

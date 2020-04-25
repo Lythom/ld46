@@ -7,23 +7,23 @@ class Shelf extends Model {
 	/**
 	 * Do not manipulate directly, use put and remove instead
 	 */
-	@observe public var items(default, null):List<SorcererItem>;
+	@observe public var items(default, null):Array<SorcererItem>;
 
 	public function new() {
 		super();
-		items = new List<SorcererItem>();
+		items = new Array<SorcererItem>();
 	}
 
 	public function put(item:SorcererItem):Bool {
 		if (items.length >= Data.configs.get(ShelfSize).sure().value) 
 			return false;
-		items.add(item);
+		items.push(item);
 		this.invalidateItems();
 		return true;
 	}
 
 	public function putOnHiddenTemporarySlot(item:SorcererItem):Void {
-		items.add(item);
+		items.push(item);
 		this.invalidateItems();
 	}
 

@@ -8,7 +8,7 @@ import tracker.Model;
 enum GameState {
 	ShopEquip;
 	ShopEquipReady;
-	Battle;
+	BattleStart(otherPlayer:Player);
 	BattleEnded;
 	OutOfTournament;
 	Winner;
@@ -16,11 +16,13 @@ enum GameState {
 
 @:nullSafety(Off)
 class Player extends Model {
+	public static var PLAYER_ID = 0;
+
 	@observe public var gameState:GameState = ShopEquip;
 	@observe public var playerName:String;
-	@observe public var sorcerers:List<Sorcerer>;
+	@observe public var sorcerers:Array<Sorcerer>;
 	@observe public var chaleace:Chaleace;
-	@observe public var battles:List<Battle>;
+	@observe public var battles:Array<Battle>;
 	@observe public var shop:Shop;
 	@observe public var shelf:Shelf;
 
@@ -31,9 +33,9 @@ class Player extends Model {
 	public function new(playerName:String) {
 		super();
 		this.gameState = ShopEquip;
-		this.playerName = playerName;
-		battles = new List<Battle>();
-		sorcerers = new List<Sorcerer>();
+		this.playerName = playerName + ' (' + PLAYER_ID++ + ')';
+		battles = new Array<Battle>();
+		sorcerers = new Array<Sorcerer>();
 		chaleace = new Chaleace();
 		shop = new Shop();
 		shelf = new Shelf();
@@ -42,17 +44,17 @@ class Player extends Model {
 		chaleace.boardConfiguredY = 16;
 
 		var sorc = new Sorcerer();
-		sorcerers.add(sorc);
+		sorcerers.push(sorc);
 		sorc.boardConfiguredX = 46;
 		sorc.boardConfiguredY = -52;
 
 		sorc = new Sorcerer();
-		sorcerers.add(sorc);
+		sorcerers.push(sorc);
 		sorc.boardConfiguredX = 130;
 		sorc.boardConfiguredY = 45;
 
 		sorc = new Sorcerer();
-		sorcerers.add(sorc);
+		sorcerers.push(sorc);
 		sorc.boardConfiguredX = -95;
 		sorc.boardConfiguredY = 38;
 
@@ -65,16 +67,17 @@ class Player extends Model {
 				counts.set(idlvl, counts.exists(idlvl) ? counts.get(idlvl) + 1 : 1);
 			}
 			function doMerge(merged:SorcererItem, outs:Array<SorcererItem>) {
+				trace('doMerge!');
 				merged.level++;
 				for (out in outs) {
 					out.triggerMergeInto(merged);
-					ceramic.Timer.delay(this, 0.45, () -> shelf.remove(out));
+					shelf.remove(out);
 				}
 			}
 			for (idlvl => count in counts) {
 				if (count >= 3) {
 					var mergeables = current.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
-					doMerge(mergeables.pop(), [mergeables.pop(), mergeables.pop()]);
+					doMerge(mergeables.shift(), [mergeables.shift(), mergeables.shift()]);
 					return;
 					// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
 				}
@@ -85,12 +88,16 @@ class Player extends Model {
 					if (counts.get(idlvl) == 2) {
 						// 2 on shelf, 1 on sorcerer, merge on sorcerer !
 						var mergeables = current.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
-						doMerge(item, [mergeables.pop(), mergeables.pop()]);
+						doMerge(item, [mergeables.shift(), mergeables.shift()]);
 						return;
 						// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
 					}
 				}
 			}
+		});
+
+		autorun(() -> {
+			trace(this.playerName + ' chaleace at: ' + chaleace.x);
 		});
 
 		autorun(() -> {
@@ -102,6 +109,26 @@ class Player extends Model {
 				placeOnConfiguredPositions();
 			}
 		});
+	}
+
+	public function tryPurchaseItem(item:SorcererItem) {
+		if (!this.shop.canBuy() || item == null)
+			return;
+		var hasRoom = this.shelf.put(item);
+		if (hasRoom) {
+			this.shop.processPurchase(item);
+		} else {
+			trace('put on temp slot');
+			this.shelf.putOnHiddenTemporarySlot(item);
+			// will trigger merge if any and free the hidden slot. Else, remove it from shelf.
+			if (this.shelf.hasHiddenTempItem()) {
+				trace("was on shelf but has not been merged: removed.");
+				this.shelf.remove(item);
+				ceramic.Timer.delay(this, 0.1, () -> {
+					this.shop.invalidateDraw();
+				});
+			}
+		}
 	}
 
 	public function get_boardEntities() {

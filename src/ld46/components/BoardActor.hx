@@ -9,7 +9,7 @@ import ceramic.Assets;
 import ceramic.Quad;
 import ceramic.Shortcuts.*;
 
-class Board extends Quad {
+class BoardActor extends Quad {
 	var sorcerers:Array<SorcererActor>;
 	var chaleace:ChaleaceActor;
 
@@ -17,12 +17,15 @@ class Board extends Quad {
 		super();
 		sorcerers = new Array<SorcererActor>();
 		chaleace = new ChaleaceActor(assets, player.chaleace);
+		add(chaleace);
+
 		this.texture = assets.texture(Images.PRELOAD__MAIN_BOARD);
 		this.anchor(0.5, 0.5);
 		var isLocalPlayer = shelf != null;
 
 		for (sorcerer in player.sorcerers) {
 			var actor = new SorcererActor(assets, sorcerer, iaf);
+			add(actor);
 			sorcerers.push(actor);
 			if (isLocalPlayer) {
 				actor.onPointerDown(this, evt -> {
@@ -32,6 +35,7 @@ class Board extends Quad {
 						actor.screenToVisual(evt.x, evt.y, startOffset);
 						var handleMove = (x:Float, y:Float) -> {
 							if (sorcerer != null && this.hits(x, y)) {
+								actor.description.active = false;
 								var screenTargetX = x - startOffset.x + actor.anchorX * actor.width;
 								var screenTargetY = y - startOffset.y + actor.anchorY * actor.height;
 								this.screenToVisual(screenTargetX, screenTargetY, targetPositionOnBoard);
@@ -71,27 +75,16 @@ class Board extends Quad {
 		var p = new Point();
 		app.onUpdate(this, delta -> {
 			if (this.active) {
-				// var boardTargetLocation = Data.placements.get(OpponentBoard).sure();
-				// if (isLocalPlayer) {
-				// 	if (this.chaleace.chaleace.fighting) {
-				// 		boardTargetLocation = Data.placements.get(MainBoardBattle).sure();
-				// 	} else {
-				// 		boardTargetLocation = Data.placements.get(MainBoardShop).sure();
-				// 	}
-				// }
-				// var localOffsetX = boardTargetLocation.x - this.x; // (isLocalPlayer ? 0 : -398);
-				// var localOffsetY = boardTargetLocation.y - this.y; // (isLocalPlayer ? 0 : 168);
-				var p = new Point();
 				var localOffsetX = (isLocalPlayer ? 0 : -398);
-				var localOffsetY = (isLocalPlayer ? 0 : 168);
+				var localOffsetY = (isLocalPlayer ? 0 : 173);
 				for (sorcererA in sorcerers) {
-					this.visualToScreen(sorcererA.sorcerer.x + this.width * 0.5, sorcererA.sorcerer.y + this.height * 0.5, p);
-					sorcererA.pos(p.x + localOffsetX, p.y + localOffsetY);
-					sorcererA.depth = 1000 + p.y;
+					sorcererA.pos(sorcererA.sorcerer.x + this.width * 0.5 + localOffsetX, sorcererA.sorcerer.y + this.height * 0.5 + localOffsetY);
+					sorcererA.visualToScreen(0, 0, p);
+					sorcererA.updateDepth(1000 + p.y);
 				}
-				this.visualToScreen(chaleace.chaleace.x + this.width * 0.5, chaleace.chaleace.y + this.height * 0.5, p);
-				chaleace.pos(p.x + localOffsetX, p.y + localOffsetY);
-				chaleace.depth = 1000 + p.y;
+				chaleace.pos(chaleace.chaleace.x + this.width * 0.5 + localOffsetX, chaleace.chaleace.y + this.height * 0.5 + localOffsetY);
+				chaleace.visualToScreen(0, 0, p);
+				chaleace.updateDepth(1000 + p.y);
 			}
 		});
 

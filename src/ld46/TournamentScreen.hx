@@ -9,7 +9,7 @@ import ceramic.Images;
 import ceramic.Easing;
 import ld46.components.ShopActor;
 import ld46.components.TrashActor;
-import ld46.components.Board;
+import ld46.components.BoardActor;
 import ld46.components.NextRoundButton;
 import ld46.components.ShelfActor;
 import ld46.model.Player;
@@ -32,8 +32,8 @@ class TournamentScreen extends Visual {
 	var shelf:ShelfActor;
 	var nextRoundButton:NextRoundButton;
 
-	var mainBoard:Board;
-	var boards:Map<Player, Board>;
+	var mainBoard:BoardActor;
+	var boards:Map<Player, BoardActor>;
 
 	var trash:TrashActor;
 	var playersScores:Text;
@@ -49,15 +49,17 @@ class TournamentScreen extends Visual {
 		nextRoundButton = new NextRoundButton(assets);
 		playersScores = new Text();
 
-		shop = new ShopActor(assets, localPlayer.shop, itemActorDirector);
+		shop = new ShopActor(assets, localPlayer, itemActorDirector);
 		shelf = new ShelfActor(assets, localPlayer.shelf, itemActorDirector);
 		trash = new TrashActor(assets, shelf);
-		mainBoard = new Board(assets, localPlayer, this.itemActorDirector, shelf);
+		mainBoard = new BoardActor(assets, localPlayer, this.itemActorDirector, shelf);
+		mainBoard.depthRange = -1;
 		boards = new Map();
 		for (p in allPlayers) {
 			if (p != localPlayer) {
-				var b = new Board(assets, p, itemActorDirector, null);
+				var b = new BoardActor(assets, p, itemActorDirector, null);
 				boards.set(p, b);
+				b.depthRange = -1;
 				b.setActive(false);
 			}
 		}
@@ -97,25 +99,6 @@ class TournamentScreen extends Visual {
 			}
 		});
 
-		shop.onPurchaseItem(this, item -> {
-			if (!localPlayer.shop.canBuy())
-				return;
-			var hasRoom = localPlayer.shelf.put(item);
-			if (hasRoom) {
-				localPlayer.shop.processPurchase(item);
-			} else {
-				localPlayer.shelf.putOnHiddenTemporarySlot(item);
-				// will trigger merge if any and free the hidden slot. Else, remove it from shelf.
-				if (localPlayer.shelf.hasHiddenTempItem()) {
-					trace("was on shelf but has not been merged: removed.");
-					localPlayer.shelf.remove(item);
-					ceramic.Timer.delay(this, 0.1, () -> {
-						localPlayer.shop.invalidateDraw();
-					});
-				}
-			}
-		});
-
 		localPlayer.onGameStateChange(this, (_, __) -> updatePlacements());
 
 		app.onKeyDown(this, e -> {
@@ -130,7 +113,7 @@ class TournamentScreen extends Visual {
 				localPlayer.shop.drawItems(SorcererTournament.debugInstance);
 			}
 		});
-		// HotLoader.instance.onReload(this, updatePlacements);
+		HotLoader.instance.onReload(this, updatePlacements);
 
 		updatePlacements();
 
@@ -138,64 +121,72 @@ class TournamentScreen extends Visual {
 	}
 
 	function updatePlacements() {
-		var battle = localPlayer.battles.last();
-		var opponent = (battle == null ? null : (battle.playerA == localPlayer ? battle.playerB : battle.playerA));
-		var opponentBoard = opponent == null ? null : boards.get(opponent);
-		if (localPlayer.gameState == ShopEquip) {
-			if (opponentBoard != null) {
-				transitionDisable(opponentBoard, Data.placements.get(OpponentBoard).sure(), 1000, -500);
-				Timer.delay(this, 1, () -> opponentBoard.setActive(false));
-			}
-			mainBoard.depth = 3;
-			mainBoard.transition(Easing.QUAD_EASE_OUT, 1, props -> {
-				props.x = Data.placements.get(MainBoardShop).sure().x;
-				props.y = Data.placements.get(MainBoardShop).sure().y;
-			});
-			transitionActivate(shop, Data.placements.get(Shop).sure(), 1000, 0);
-			transitionActivate(shelf, Data.placements.get(Shelf).sure(), 0, 500);
-			transitionActivate(trash, Data.placements.get(Trash).sure(), -500, 0);
-			transitionActivate(nextRoundButton, Data.placements.get(NextRoundButton).sure(), -500, 0);
-		} else if (localPlayer.gameState == ShopEquipReady) {
-			mainBoard.transition(Easing.QUAD_EASE_OUT, 1, props -> {
-				props.x = Data.placements.get(MainBoardBattle).sure().x;
-				props.y = Data.placements.get(MainBoardBattle).sure().y;
-			});
-			transitionDisable(shop, Data.placements.get(Shop).sure(), 1000, 0);
-			transitionDisable(shelf, Data.placements.get(Shelf).sure(), 0, 500);
-			transitionDisable(trash, Data.placements.get(Trash).sure(), -500, 0);
-			nextRoundButton.active = false;
-		} else if (localPlayer.gameState == Battle) {
-			new ld46.fx.AnnounceFX('BATTLE START', assets.font(Fonts.SIMPLY_MONO_60));
-			if (opponentBoard != null) {
-				opponentBoard.depth = 2;
-				transitionActivate(opponentBoard, Data.placements.get(OpponentBoard).sure(), 1000, -500);
-				opponentBoard.setActive(true);
-			}
-			trace("Battle");
-		} else if (localPlayer.gameState == BattleEnded) {
-			if (localPlayer.isWinnerOfLastBattle()) {
-				new ld46.fx.AnnounceFX('YOU WON', assets.font(Fonts.SIMPLY_MONO_60));
-			} else {
-				new ld46.fx.AnnounceFX('Battle Lost', assets.font(Fonts.SIMPLY_MONO_60));
-			}
-		} else if (localPlayer.gameState == OutOfTournament) {
-			new ld46.fx.AnnounceFX('Chaleace destroyed', assets.font(Fonts.SIMPLY_MONO_60));
-			Timer.delay(this, 2, () -> {
-				new ld46.fx.AnnounceFX('Try again', assets.font(Fonts.SIMPLY_MONO_60), 72, 5);
+		switch (localPlayer.gameState) {
+			case ShopEquip:
+				mainBoard.transition(Easing.QUAD_EASE_OUT, 1, props -> {
+					props.x = Data.placements.get(MainBoardShop).sure().x;
+					props.y = Data.placements.get(MainBoardShop).sure().y;
+				});
+				transitionActivate(shop, Data.placements.get(Shop).sure(), 1000, 0);
+				transitionActivate(shelf, Data.placements.get(Shelf).sure(), 0, 500);
+				transitionActivate(trash, Data.placements.get(Trash).sure(), -500, 0);
+				transitionActivate(nextRoundButton, Data.placements.get(NextRoundButton).sure(), -500, 0);
+
+			case ShopEquipReady:
+				mainBoard.transition(Easing.QUAD_EASE_OUT, 1, props -> {
+					props.x = Data.placements.get(MainBoardBattle).sure().x;
+					props.y = Data.placements.get(MainBoardBattle).sure().y;
+				});
+				transitionDisable(shop, Data.placements.get(Shop).sure(), 1000, 0);
+				transitionDisable(shelf, Data.placements.get(Shelf).sure(), 0, 500);
+				transitionDisable(trash, Data.placements.get(Trash).sure(), -500, 0);
+				nextRoundButton.active = false;
+
+			case BattleStart(otherPlayer):
+				var battle = localPlayer.battles.last();
+				var opponent = (battle == null ? null : (battle.playerA == localPlayer ? battle.playerB : battle.playerA));
+				if (opponent != otherPlayer)
+					throw "nooooooooo";
+				var opponentBoard = opponent == null ? null : boards.get(opponent);
+				new ld46.fx.AnnounceFX('BATTLE START', assets.font(Fonts.SIMPLY_MONO_60));
+				if (opponentBoard != null) {
+					add(opponentBoard);
+					transitionActivate(opponentBoard, Data.placements.get(OpponentBoard).sure(), 1000, -500);
+					opponentBoard.setActive(true);
+					opponentBoard.depth = 2;
+				}
+				trace("Battle");
+
+			case BattleEnded:
+				var battle = localPlayer.battles.last();
+				var opponent = (battle == null ? null : (battle.playerA == localPlayer ? battle.playerB : battle.playerA));
+				var opponentBoard = opponent == null ? null : boards.get(opponent);
+				if (localPlayer.isWinnerOfLastBattle()) {
+					new ld46.fx.AnnounceFX('YOU WON', assets.font(Fonts.SIMPLY_MONO_60));
+				} else {
+					new ld46.fx.AnnounceFX('Battle Lost', assets.font(Fonts.SIMPLY_MONO_60));
+				}
+				if (opponentBoard != null) {
+					transitionDisable(opponentBoard, Data.placements.get(OpponentBoard).sure(), 1000, -500);
+					Timer.delay(this, 1, () -> opponentBoard.setActive(false));
+				}
+
+			case OutOfTournament:
+				new ld46.fx.AnnounceFX('Chaleace destroyed', assets.font(Fonts.SIMPLY_MONO_60));
+				Timer.delay(this, 2, () -> {
+					new ld46.fx.AnnounceFX('Try again', assets.font(Fonts.SIMPLY_MONO_60), 72, 5);
+					Timer.delay(this, 5, () -> {
+						this.destroy();
+						new MainMenu(assets);
+					});
+				});
+
+			case Winner:
+				new ld46.fx.AnnounceFX('Winner - Congrats', assets.font(Fonts.SIMPLY_MONO_60), 72, 5);
 				Timer.delay(this, 5, () -> {
 					this.destroy();
 					new MainMenu(assets);
 				});
-			});
-		} else if (localPlayer.gameState == OutOfTournament) {
-			new ld46.fx.AnnounceFX('Chaleace destroyed', assets.font(Fonts.SIMPLY_MONO_60));
-			Timer.delay(this, 2, () -> {
-				new ld46.fx.AnnounceFX('Try again', assets.font(Fonts.SIMPLY_MONO_60), 72, 5);
-				Timer.delay(this, 5, () -> {
-					this.destroy();
-					new MainMenu(assets);
-				});
-			});
 		}
 	}
 

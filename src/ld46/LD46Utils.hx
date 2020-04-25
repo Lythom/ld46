@@ -10,9 +10,21 @@ class LD46Utils {
 	public static inline function randomInt(from:Int, to:Int):Int {
 		return from + Math.floor(((to - from + 1) * Math.random()));
 	}
-	
+
 	public static inline function pickRandom<T>(array:Array<T>):Null<T> {
 		return array[randomInt(0, array.length - 1)];
+	}
+
+	public static inline function first<T>(array:Array<T>):Null<T> {
+		return array.length > 0 ? array[0] : null;
+	}
+
+	public static inline function clear<T>(array:Array<T>) {
+		return array.splice(0, array.length);
+	}
+
+	public static inline function last<T>(array:Array<T>):Null<T> {
+		return array.length > 0 ? array[array.length - 1] : null;
 	}
 
 	/** Return a random string of a certain length.  You can optionally specify 
@@ -64,7 +76,6 @@ class LD46Utils {
 		return Math.atan2(b, a);
 	}
 
-	
 	public static function getAttributeDescription(attrValues:AttributeValues):String {
 		return Data.stats.all.map(stat -> getAttributeValueDescription(attrValues, stat.id)).filter(str -> str != null).join('\n');
 	}

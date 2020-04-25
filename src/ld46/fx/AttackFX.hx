@@ -34,6 +34,7 @@ class AttackFX extends Visual {
 		effect.height = 5 + damage * 0.1;
 		effect.anchor(0.5, 0.5);
 		effect.skew(5 + 50 * Math.random(), 5 + 50 * Math.random());
+		add(effect);
 
 		this.alpha = 0.75;
 
