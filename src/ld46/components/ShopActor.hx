@@ -59,8 +59,7 @@ class ShopActor extends Quad {
 		var deletes = this.children == null ? [] : this.children.filter(child -> child != null && Std.is(child, SorcererItemActor)
 			&& !this.items.has(cast child));
 		for (deleteMe in deletes) {
-			this.remove(deleteMe);
-			itemActorDirector.giveBack(cast deleteMe);
+			itemActorDirector.giveBack(cast deleteMe, this);
 		}
 		var i = 0;
 		for (actor in this.items) {

@@ -1,13 +1,21 @@
 package ld46.components;
 
+import ceramic.Easing;
 import lythom.stuffme.AttributeValues;
 import ceramic.Point;
 import ceramic.Assets;
 import ld46.model.SorcererItem;
 import ceramic.Quad;
 
+enum OutTransition {
+	Reduce;
+	Cut;
+}
+
 class SorcererItemActor extends Quad {
 	public var item:SorcererItem;
+
+	public var outTransition:OutTransition = Reduce;
 
 	private var description:Description;
 	private var assets:Assets;
@@ -67,18 +75,48 @@ class SorcererItemActor extends Quad {
 		description.active = false;
 	}
 
-	public function update() {}
+	public function disappear(delta:Float):Void {
+		if (this.destroyed)
+			return;
+
+		// grow to anticipate action
+		this.scale(1, 1);
+		this.transition(Easing.QUAD_EASE_OUT, 0.1, props -> {
+			props.scale(1.2, 1.2);
+		}).run(tween -> tween.onComplete(this, () -> {
+			// action time, either destroy or reset size
+			if (this != null && this.parent == null) {
+				switch outTransition {
+					case Reduce:
+						this.transition(Easing.QUAD_EASE_OUT, 0.2, props -> {
+							props.scale(0.2, 0.2);
+							props.alpha = 0.2;
+						}).run(tweenOut -> tweenOut.onComplete(this, () -> {
+							this.active = false;
+							this.scale(1, 1);
+							this.alpha = 1;
+						}));
+					case Cut:
+						this.active = false;
+				}
+			} else {
+				// reset props and let new parent do the lead
+				this.transition(Easing.QUAD_EASE_OUT, 0.1, props -> {
+					props.scale(1, 1);
+				});
+			}
+		}));
+	}
 
 	public static function getDescription(item:SorcererItem) {
-		
 		var itemEffects:CalculatedStuff = (new AttributeValues()).with([item]);
-		
+
 		return ''
-			+ '${(item.itemData.set != null ? '"${item.itemData.set.sure().id}" ' : ' ') + Data.Items_slot.NAMES[item.itemData.slot.toInt()]} (Level ${item.level})\n'
-			// + (item.itemData.set != null ? 'Set "${item.itemData.set.sure().id}"\nSet bonus :${item.itemData.set.sure().bonusDescription}\n' : '')
+			+
+			'${(item.itemData.set != null ? '"${item.itemData.set.sure().id}" ' : ' ') + Data.Items_slot.NAMES[item.itemData.slot.toInt()]} (Level ${item.level})\n' // + (item.itemData.set != null ? 'Set "${item.itemData.set.sure().id}"\nSet bonus :${item.itemData.set.sure().bonusDescription}\n' : '')
 			+ (item.itemData.provideRole != null ? 'PROVIDE "${item.itemData.provideRole.sure().id}": ${item.itemData.provideRole.sure().description}\n' : '')
-			+ (item.itemData.provideBonus != null ? 'GIVES:\n  * ${itemEffects.items[0].bonuses.map(bd -> bd.description).join(',\n  * ')}\n' : '')
-			//+ 'Id:${item.id}'
+			+
+			(item.itemData.provideBonus != null ? 'GIVES:\n  * ${itemEffects.items[0].bonuses.map(bd -> bd.description).join(',\n  * ')}\n' : '') // + 'Id:${item.id}'
 			;
 	}
 }

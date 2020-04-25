@@ -58,47 +58,9 @@ class Player extends Model {
 		sorc.boardConfiguredX = -95;
 		sorc.boardConfiguredY = 38;
 
-		var counts = new StringMap<Int>();
-		shelf.onItemsChange(this, (current, _) -> {
-			// try merge
-			counts.clear();
-			for (item in current) {
-				var idlvl = item.itemData.id.toString() + item.level;
-				counts.set(idlvl, counts.exists(idlvl) ? counts.get(idlvl) + 1 : 1);
-			}
-			function doMerge(merged:SorcererItem, outs:Array<SorcererItem>) {
-				trace('doMerge!');
-				merged.level++;
-				for (out in outs) {
-					out.triggerMergeInto(merged);
-					shelf.remove(out);
-				}
-			}
-			for (idlvl => count in counts) {
-				if (count >= 3) {
-					var mergeables = current.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
-					doMerge(mergeables.shift(), [mergeables.shift(), mergeables.shift()]);
-					return;
-					// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
-				}
-			}
-			for (s in sorcerers) {
-				for (item in s.items) {
-					var idlvl = item.itemData.id.toString() + item.level;
-					if (counts.get(idlvl) == 2) {
-						// 2 on shelf, 1 on sorcerer, merge on sorcerer !
-						var mergeables = current.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
-						doMerge(item, [mergeables.shift(), mergeables.shift()]);
-						return;
-						// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
-					}
-				}
-			}
-		});
-
 		autorun(() -> {
-			trace(this.playerName + ' chaleace at: ' + chaleace.x);
-		});
+			shelf.items;
+		}, tryMerge);
 
 		autorun(() -> {
 			for (sorc in sorcerers) {
@@ -109,6 +71,44 @@ class Player extends Model {
 				placeOnConfiguredPositions();
 			}
 		});
+	}
+
+	var counts = new StringMap<Int>();
+
+	public function tryMerge() {
+		// try merge
+		counts.clear();
+		for (item in shelf.items) {
+			var idlvl = item.itemData.id.toString() + item.level;
+			counts.set(idlvl, counts.exists(idlvl) ? counts.get(idlvl) + 1 : 1);
+		}
+		function doMerge(merged:SorcererItem, outs:Array<SorcererItem>) {
+			merged.level++;
+			for (out in outs) {
+				out.triggerMergeInto(merged);
+				shelf.remove(out);
+			}
+		}
+		for (idlvl => count in counts) {
+			if (count >= 3) {
+				var mergeables = shelf.items.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
+				doMerge(mergeables.shift(), [mergeables.shift(), mergeables.shift()]);
+				return;
+				// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
+			}
+		}
+		for (s in sorcerers) {
+			for (item in s.items) {
+				var idlvl = item.itemData.id.toString() + item.level;
+				if (counts.get(idlvl) == 2) {
+					// 2 on shelf, 1 on sorcerer, merge on sorcerer !
+					var mergeables = shelf.items.filter(item -> (item.itemData.id.toString() + item.level) == idlvl);
+					doMerge(item, [mergeables.shift(), mergeables.shift()]);
+					return;
+					// TODO: when the merged item is put back into the deck, the destroyed items should be back in too !
+				}
+			}
+		}
 	}
 
 	public function tryPurchaseItem(item:SorcererItem) {

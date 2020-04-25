@@ -135,22 +135,6 @@ class SorcererActor extends Quad {
 		itemActor.offPointerOut();
 		itemActor.hideDescription();
 		itemActor.scale(1, 1);
-
-		// itemActor.onPointerOver(this, evy -> {
-		// 	itemActor.transition(Easing.QUAD_EASE_OUT, 0.15, props -> {
-		// 		props.scaleX = 1.1;
-		// 		props.scaleY = 1.1;
-		// 	});
-		// 	itemActor.showDescription();
-		// });
-
-		// itemActor.onPointerOut(this, evt -> {
-		// 	itemActor.transition(Easing.QUAD_EASE_IN_OUT, 0.15, props -> {
-		// 		props.scaleX = 1;
-		// 		props.scaleY = 1;
-		// 	});
-		// 	itemActor.hideDescription();
-		// });
 	}
 
 	public function getItemOnSlot(slot:Data.Items_slot):Null<SorcererItemActor> {

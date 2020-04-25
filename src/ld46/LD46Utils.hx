@@ -1,5 +1,8 @@
 package ld46;
 
+import ceramic.App;
+import ceramic.Point;
+import ceramic.Visual;
 import ld46.model.BoardEntity;
 import lythom.stuffme.AttributeValues;
 
@@ -90,5 +93,25 @@ class LD46Utils {
 			default:
 				return stat.toString() + ': +' + Std.int(value);
 		}
+	}
+
+	/**
+	 * Change parent while preserving screen position.
+	 * @param visual
+	 * @param from
+	 * @param to
+	 */
+	public static function changeParent(visual:Visual, toParent:Null<Visual>) {
+		if (visual.parent == toParent)
+			return;
+		var from = new Point();
+		visual.visualToScreen(0, 0, from);
+		if (visual.parent != null)
+			visual.parent.remove(visual);
+		if (toParent != null) {
+			toParent.add(visual);
+			toParent.screenToVisual(from.x, from.y, from);
+		}
+		visual.pos(from.x + visual.width * visual.anchorX, from.y + visual.height * visual.anchorY);
 	}
 }

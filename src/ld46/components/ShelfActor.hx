@@ -61,28 +61,24 @@ class ShelfActor extends Quad {
 		creditsTextBg.depth = 10;
 		add(creditsTextBg);
 
-		refreshItems(shelf.items, null);
 		this.texture = assets.texture(Images.PRELOAD__SHELF);
 
-		shelf.onItemsChange(this, refreshItems);
+		autorun(() -> {
+			shelf.items;
+		}, refreshItems);
 	}
 
-	function refreshItems(newDraw:Array<SorcererItem>, previousDraw:Null<Array<SorcererItem>>) {
-		this.items = newDraw.map(item -> itemActorDirector.getItemActor(item));
+	function refreshItems() {
+		this.items = shelf.items.map(item -> itemActorDirector.getItemActor(item));
 		var padding = Data.placements.get(ShelfPadding).sure().x;
 		var deletes = this.children == null ? [] : this.children.filter(child -> child != null && Std.is(child, SorcererItemActor)
 			&& !this.items.has(cast child));
 		for (deleteMe in deletes) {
-			this.remove(deleteMe);
-			ceramic.Timer.delay(this, 0.5, () -> itemActorDirector.giveBack(cast deleteMe));
+			itemActorDirector.giveBack(cast deleteMe, this);
 		}
 		var i = 0;
 		for (actor in this.items) {
-			var from = new Point();
-			actor.visualToScreen(0, 0, from);
-			this.add(actor);
-			this.screenToVisual(from.x, from.y, from);
-			actor.pos(from.x + actor.width * actor.anchorX, from.y + actor.height * actor.anchorY);
+			actor.changeParent(this);
 			var x = padding + actor.width / 2 + (actor.width + padding) * i;
 			var y = this.height / 2;
 			if (actor.x != x || actor.y != y) {

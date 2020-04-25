@@ -12,4 +12,9 @@ class NullTools {
 		}
 		return @:nullSafety(Off) (value : T);
 	}
+
+	static public inline function run<T>(value:Null<T>, callback:T->Void):Void {
+		if (value != null)
+			callback(@:nullSafety(Off) (value : T));
+	}
 }
