@@ -38,7 +38,7 @@ class ShopActor extends Quad {
 		creditsText.pointSize = 20;
 		creditsText.pos(25, -10);
 		creditsText.depth = 11;
-		creditsText.font = assets.font(Fonts.SIMPLY_MONO_60);
+		// creditsText.font = assets.font(Fonts.SIMPLY_MONO_60);
 		add(creditsText);
 		creditsTextBg.color = Color.BLACK;
 		creditsTextBg.alpha = 0.75;

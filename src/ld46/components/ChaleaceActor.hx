@@ -34,7 +34,7 @@ class ChaleaceActor extends Quad {
 		this.size(75, 125);
 
 		healthText.pos(20, -20);
-		healthText.font = assets.font(Fonts.SIMPLY_MONO_60);
+		// healthText.font = assets.font(Fonts.SIMPLY_MONO_60);
 		healthText.pointSize = 15;
 		add(healthText);
 

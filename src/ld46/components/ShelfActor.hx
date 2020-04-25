@@ -51,7 +51,7 @@ class ShelfActor extends Quad {
 		creditsText.pointSize = 20;
 		creditsText.pos(25, -10);
 		creditsText.depth = 11;
-		creditsText.font = assets.font(Fonts.SIMPLY_MONO_60);
+		// creditsText.font = assets.font(Fonts.SIMPLY_MONO_60);
 		creditsText.content = 'Shelf - Drag and drop items to sorcerers or trash';
 		add(creditsText);
 		creditsTextBg.color = Color.BLACK;
@@ -92,6 +92,7 @@ class ShelfActor extends Quad {
 				var startX = actor.x;
 				var startY = actor.y;
 				actor.hideDescription();
+				actor.depth = 90000;
 				var handleMouseMove = (x:Float, y:Float) -> {
 					actor.pos(x - this.x, y - this.y);
 					this.emitMoveItemAt(actor, x, y);

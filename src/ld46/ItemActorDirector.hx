@@ -40,7 +40,7 @@ class ItemActorDirector extends Visual {
 			itemActor.changeParent(null);
 		}
 		itemActor.depth = 89999;
-		app.batchOnPostUpdate(itemActor.disappear);
+		itemActor.disappear();
 	}
 
 	public function mergeTransitionTo(itemActor:SorcererItemActor, to:Point) {

@@ -13,6 +13,10 @@ enum OutTransition {
 }
 
 class SorcererItemActor extends Quad {
+	private static var ITEM_ID:Int = 0;
+
+	private var itemId:Int = 0;
+
 	public var item:SorcererItem;
 
 	public var outTransition:OutTransition = Reduce;
@@ -21,6 +25,7 @@ class SorcererItemActor extends Quad {
 	private var assets:Assets;
 
 	public function new(assets:Assets, item:SorcererItem) {
+		itemId = ITEM_ID++;
 		super();
 		this.item = item;
 		this.assets = assets;
@@ -75,7 +80,8 @@ class SorcererItemActor extends Quad {
 		description.active = false;
 	}
 
-	public function disappear(delta:Float):Void {
+	public function disappear():Void {
+		trace('Disappear $itemId');
 		if (this.destroyed)
 			return;
 

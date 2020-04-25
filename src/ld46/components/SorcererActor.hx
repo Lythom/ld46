@@ -41,7 +41,7 @@ class SorcererActor extends Quad {
 		this.scale(0.9 + Math.random() * 0.2, 0.9 + Math.random() * 0.2);
 
 		healthText.pos(20, -20);
-		healthText.font = assets.font(Fonts.SIMPLY_MONO_60);
+		// healthText.font = assets.font(Fonts.SIMPLY_MONO_60);
 		healthText.pointSize = 15;
 		add(healthText);
 

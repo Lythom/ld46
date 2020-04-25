@@ -98,20 +98,24 @@ class LD46Utils {
 	/**
 	 * Change parent while preserving screen position.
 	 * @param visual
-	 * @param from
-	 * @param to
+	 * @param toParent
 	 */
 	public static function changeParent(visual:Visual, toParent:Null<Visual>) {
 		if (visual.parent == toParent)
 			return;
-		var from = new Point();
-		visual.visualToScreen(0, 0, from);
-		if (visual.parent != null)
+		changeParentPos.x = visual.x;
+		changeParentPos.y = visual.y;
+		if (visual.parent != null) {
+			visual.parent.visualToScreen(visual.x, visual.y, changeParentPos);
 			visual.parent.remove(visual);
+		}
+
 		if (toParent != null) {
 			toParent.add(visual);
-			toParent.screenToVisual(from.x, from.y, from);
+			toParent.screenToVisual(changeParentPos.x, changeParentPos.y, changeParentPos);
 		}
-		visual.pos(from.x + visual.width * visual.anchorX, from.y + visual.height * visual.anchorY);
+		visual.pos(changeParentPos.x, changeParentPos.y);
 	}
+
+	private static var changeParentPos:Point = new Point();
 }
